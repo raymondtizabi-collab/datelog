@@ -28,6 +28,8 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
 #shareCard .tile{background:rgba(255,255,255,.14);border-radius:14px;padding:12px;margin-top:10px}
 .hide{display:none}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#022;padding:10px 16px;border-radius:10px;font-weight:700}
 @media(max-width:560px){.seg button{min-width:0;padding:9px 4px;font-size:13px}nav a{margin-left:9px;font-size:13px}.bar .l{width:80px}}
+#lockOv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:rgba(15,17,21,.35)}
+.locked #cmpInner{filter:blur(7px);pointer-events:none;user-select:none}body:not(.locked) #lockOv{display:none}body:not(.locked) #lockCard h2::before{content:"🔓 "}
 </style></head><body>
 <header><div class="logo">date<span>log</span></div><nav><a href="#log">Log</a><a href="#dash">Stats</a><a href="#compare">Compare</a><a href="#card">Share</a></nav></header>
 <main>
@@ -52,10 +54,10 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <div class="row" style="margin-top:16px"><button class="btn">Save date</button><span class="muted">Stored only in this browser (localStorage).</span></div>
  </form></div>
  <div class="card"><h2>Recent dates</h2><table id="list"></table>
- <div class="row" style="margin-top:12px"><button class="btn g" id="demo">Load demo data</button><button class="btn g" id="reset">Reset all data</button><span class="muted" id="demoNote"></span></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn g" id="demo">Try with demo data</button><button class="btn g" id="clearDemo">Clear demo data</button><button class="btn g" id="reset">Reset all data</button><span class="muted" id="demoNote"></span></div></div>
 </section>
 <section id="v-dash" class="hide">
- <div class="card hide" id="empty"><h2>No dates yet</h2><p class="muted">Your stats appear here once you log a date. <a href="#log" style="color:var(--ac)">Log one</a> or load demo data.</p></div><div id="dashBody"><div class="card"><h2>Your dating stats</h2><div class="kpis" id="kpis"></div></div>
+ <div class="card hide" id="empty"><h2>No dates yet</h2><p class="muted">Your stats appear here once you log a date. <a href="#log" style="color:var(--ac)">Log one</a>, or explore first:</p><button class="btn" id="demo2">Try with demo data</button></div><div id="dashBody"><div class="card"><h2>Your dating stats</h2><div class="kpis" id="kpis"></div></div>
  <div class="card"><h3>Second-date funnel</h3><div id="funnel"></div></div>
  <div class="grid"><div class="card"><h3>2nd-date rate by date type</h3><div id="byType"></div></div>
  <div class="card"><h3>2nd-date rate by app</h3><div id="byApp"></div></div></div>
@@ -63,15 +65,17 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <div class="card"><h3>Trend (dates & 2nd dates / month)</h3><svg id="trend" viewBox="0 0 320 140" width="100%"></svg></div></div></div>
 </section>
 <section id="v-compare" class="hide">
- <div class="card"><h2>Compare with LA daters <span class="badge">EXAMPLE DATA</span></h2>
- <p class="muted">Peer numbers below are <b>made-up placeholders</b> to show the design. Real comparisons appear only after enough people opt in to anonymous pooling. White line = peer benchmark.</p>
+ <div class="card" id="lockCard"><h2>🔒 Compare with LA daters</h2>
+ <p>Share your anonymous counts to unlock how you compare with LA daters. Only counts are shared (date type, app, second-date interest, age band, gender, city). Never nicknames, notes or exact dates.</p>
+ <div class="toggle"><input type="checkbox" id="pool"><div><b>Share my anonymous counts (off by default)</b>
+ <p class="muted">Peer groups are shown only when they have at least <b>50 contributors</b>. Turn this off anytime to stop sharing and re-lock. <b>In this version nothing is actually sent</b> — there is no server yet. Your personal stats are always free.</p></div></div></div>
+ <div class="card" id="cmpCard" style="position:relative"><div id="cmpInner"><h2>Compare with LA daters <span class="badge">EXAMPLE DATA</span></h2>
+ <p class="muted">Peer numbers below are <b>made-up placeholders</b> to show the design. Real comparisons appear only after enough people opt in. Nothing is sent yet in this version. White line = peer benchmark.</p>
  <div class="row"><div style="flex:1;min-width:140px"><label>Age band</label><select id="age"><option>25–29</option><option selected>30–34</option><option>35–39</option><option>40+</option></select></div>
  <div style="flex:1;min-width:140px"><label>Gender</label><select id="gen"><option>Woman</option><option>Man</option><option>Nonbinary</option></select></div>
  <div style="flex:1;min-width:140px"><label>City</label><select disabled><option>Los Angeles</option></select></div></div>
  <div id="cmp" style="margin-top:14px"></div></div>
- <div class="card"><h2>Anonymous pooling</h2>
- <div class="toggle"><input type="checkbox" id="pool"><div><b>Contribute my stats anonymously (off by default)</b>
- <p class="muted">If on, only aggregate counts would be shared: age band, gender, city, and per-date type/app/outcome flags. Never nicknames, notes, ratings text, or exact dates. A peer group is shown only when it has at least <b>50 contributors</b>; smaller groups are hidden. You can turn this off and request deletion anytime.<br><b>In this local version nothing is ever sent anywhere</b> — there is no server.</p></div></div></div>
+ <div id="lockOv"><div>🔒 <b>Locked</b><br><span class="muted">Turn on sharing above to unlock</span></div></div></div>
 </section>
 <section id="v-card" class="hide">
  <div id="shareCard"></div>
@@ -85,7 +89,7 @@ function demo(){const types=['coffee','drinks','dinner','activity','other'],apps
  const nicks=['DEMO-A','DEMO-B','DEMO-C','DEMO-D','DEMO-E','DEMO-F','DEMO-G','DEMO-H','DEMO-I','DEMO-J','DEMO-K','DEMO-L','DEMO-M','DEMO-N','DEMO-O'];
  const pat=[[0,0,'maybe','unknown','no',3],[1,1,'yes','yes','yes',4],[3,0,'yes','yes','yes',5],[0,2,'no','unknown','no',2],[2,0,'yes','no','no',3],[1,4,'yes','yes','yes',4],[0,3,'maybe','yes','no',3],[3,4,'yes','yes','yes',5],[1,0,'no','yes','no',2],[2,1,'maybe','unknown','no',3],[0,0,'no','no','no',2],[3,5,'yes','yes','yes',4],[1,2,'yes','unknown','no',3],[2,4,'yes','yes','yes',4],[4,0,'maybe','no','no',3]];
  const s=new Date('2026-04-05');return pat.map((p,i)=>{const d=new Date(s);d.setDate(d.getDate()+i*13);return{id:i+1,demo:true,date:d.toISOString().slice(0,10),nick:nicks[i],met:apps[p[1]],type:types[p[0]],mine:p[2],theirs:p[3],second:p[4],rating:p[5],note:'(demo)'}})}
-if(!D){D={dates:demo(),pool:false};save()}
+if(!D){D={dates:[],pool:false};save()}
 const $=s=>document.querySelector(s);const pct=(a,b)=>b?Math.round(100*a/b):0;
 function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1600)}
 document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{if(e.target.tagName!='BUTTON')return;const on=e.target.classList.contains('on');g.querySelectorAll('button').forEach(b=>b.classList.remove('on'));if(!(on&&g.dataset.n=='rating'))e.target.classList.add('on')}));
@@ -97,15 +101,17 @@ f.onsubmit=e=>{e.preventDefault();if(!f.nick.value.trim()){toast('Add a nickname
  if(/\d{3}.?\d{3}.?\d{4}|@|https?:/i.test(r.nick+r.note)){toast('No contact info please');return}
  D.dates.push(r);save();f.reset();f.date.value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);document.querySelectorAll('.seg .on').forEach(b=>b.classList.remove('on'));toast('Saved ✓');render()};
 $('#demo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo).concat(demo());save();render()};
+$('#clearDemo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo);save();render();toast('Demo data cleared')};
+$('#demo2').onclick=()=>$('#demo').click();
 $('#reset').onclick=()=>{if(confirm('Delete ALL dates (demo and real) from this browser?')){D.dates=[];save();render()}};
-$('#pool').onchange=e=>{D.pool=e.target.checked;save();toast(D.pool?'Opted in (local demo: nothing sent)':'Opted out')};
+$('#pool').onchange=e=>{D.pool=e.target.checked;save();render();toast(D.pool?'Unlocked (nothing is sent in this version)':'Sharing off — compare locked')};
 function bars(el,rows,bench){$(el).innerHTML=rows.length?rows.map(([l,a,b])=>{const p=pct(a,b),m=bench&&bench[l];return`<div class="bar"><span class="l">${l}</span><span class="t"><span class="f" style="width:${p}%;display:block"></span>${m!=null?`<span class="m" style="left:${m}%"></span>`:''}</span><span class="v">${p}%<small class="muted"> ${a}/${b}</small></span></div>`}).join(''):'<p class="muted">No data yet.</p>'}
 function group(fn){const g={};D.dates.forEach(d=>{const k=fn(d);g[k]=g[k]||[0,0];g[k][1]++;if(d.second=='yes')g[k][0]++});return Object.entries(g).map(([k,[a,b]])=>[k,a,b]).sort((x,y)=>y[2]-x[2])}
 function stats(){const ds=D.dates,n=ds.length,sec=ds.filter(d=>d.second=='yes').length,want=ds.filter(d=>d.mine=='yes').length,mut=ds.filter(d=>d.mine=='yes'&&d.theirs=='yes').length,rt=ds.filter(d=>d.rating);
  const bt=group(d=>d.type).filter(r=>r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2]);return{n,sec,want,mut,avg:rt.length?(rt.reduce((s,d)=>s+d.rating,0)/rt.length).toFixed(1):'–',best:bt[0]?bt[0][0]:'–',people:new Set(ds.map(d=>d.nick)).size}}
 function render(){const s=stats(),ds=D.dates;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
- $('#list').innerHTML='<tr><th>Date</th><th>Who</th><th>Met</th><th>Type</th><th>2nd?</th><th></th></tr>'+(ds.length?'':'<tr><td colspan=6 class="muted">No dates yet — log your first one above, or load demo data.</td></tr>')+ds.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(d=>`<tr><td>${d.date}</td><td>${esc(d.nick)}</td><td>${d.met}</td><td>${d.type}</td><td>${d.second=='yes'?'✅':'—'}</td><td><button class="btn g del" data-id="${d.id}" style="padding:4px 9px" title="Delete">✕</button></td></tr>`).join('');
- $('#demoNote').textContent=ds.some(d=>d.demo)?'Showing fake DEMO-* dates.':'';
+ $('#list').innerHTML='<tr><th>Date</th><th>Who</th><th>Met</th><th>Type</th><th>2nd?</th><th></th></tr>'+(ds.length?'':'<tr><td colspan=6 class="muted">No dates yet — log your first one above, or tap “Try with demo data”.</td></tr>')+ds.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(d=>`<tr><td>${d.date}</td><td>${esc(d.nick)}</td><td>${d.met}</td><td>${d.type}</td><td>${d.second=='yes'?'✅':'—'}</td><td><button class="btn g del" data-id="${d.id}" style="padding:4px 9px" title="Delete">✕</button></td></tr>`).join('');
+ $('#demoNote').textContent=ds.some(d=>d.demo)?'Showing fake DEMO-* dates — “Clear demo data” removes only those.':'';
  $('#kpis').innerHTML=[[s.n,'first dates logged'],[pct(s.sec,s.n)+'%','2nd-date rate'],[pct(s.mut,s.n)+'%','mutual interest'],[s.avg,'avg rating'],[s.best,'best date type']].map(([v,l])=>`<div class="kpi"><b>${v}</b><small>${l}</small></div>`).join('');
  bars('#funnel',[['Dates',s.n,s.n],['I wanted 2nd',s.want,s.n],['Mutual yes',s.mut,s.n],['2nd happened',s.sec,s.n]]);
  bars('#byType',group(d=>d.type));bars('#byApp',group(d=>d.met).filter(r=>r[0]!='In person'));bars('#byOn',group(d=>d.met=='In person'?'In person':'Online'));
@@ -113,7 +119,7 @@ function render(){const s=stats(),ds=D.dates;$('#empty').classList.toggle('hide'
  $('#trend').innerHTML=ks.map((k,i)=>`<rect x="${10+i*w+w*.15}" y="${115-95*mo[k][0]/mx}" width="${w*.35}" height="${95*mo[k][0]/mx}" rx="3" fill="#ff5a5f"/><rect x="${10+i*w+w*.5}" y="${115-95*mo[k][1]/mx}" width="${w*.35}" height="${95*mo[k][1]/mx}" rx="3" fill="#ffb347"/><text x="${10+i*w+w/2}" y="132" fill="#8b93a3" font-size="9" text-anchor="middle">${k.slice(5)}/${k.slice(2,4)}</text>`).join('')+'<text x="10" y="10" fill="#8b93a3" font-size="9">■ dates  </text><text x="60" y="10" fill="#ffb347" font-size="9">■ 2nd dates</text>';
  const AG={'25–29':3,'30–34':0,'35–39':-3,'40+':-6},GN={Woman:-2,Man:2,Nonbinary:0},o=(AG[$('#age').value]||0)+(GN[$('#gen').value]||0),EX={};Object.entries({coffee:22,drinks:31,dinner:38,activity:45,other:28,Online:30,'In person':41}).forEach(([k,v])=>EX[k]=v+o);
  $('#cmp').innerHTML='<h3>Your 2nd-date rate vs example peers</h3><div id="c1"></div><h3 style="margin-top:14px">Online vs in person</h3><div id="c2"></div><p class="muted">Example benchmarks for '+$('#age').value+' · '+$('#gen').value+' · LA are illustrative only, not survey or user data.'+(ds.length?'':' Log dates to see your bars.')+'</p>';
- bars('#c1',group(d=>d.type),EX);bars('#c2',group(d=>d.met=='In person'?'In person':'Online'),EX);$('#pool').checked=!!D.pool;
+ bars('#c1',group(d=>d.type),EX);bars('#c2',group(d=>d.met=='In person'?'In person':'Online'),EX);$('#pool').checked=!!D.pool;document.body.classList.toggle('locked',!D.pool);$('#clearDemo').classList.toggle('hide',!ds.some(d=>d.demo));
  const ba=group(d=>d.met).filter(r=>r[0]!='In person'&&r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2])[0];
  $('#shareCard').innerHTML=`<div style="font-weight:800;letter-spacing:.1em;font-size:13px">DATELOG · MY 2026</div><div style="margin-top:26px" class="big">${s.n}</div><div class="s">first dates</div><div style="margin-top:18px" class="big">${pct(s.sec,s.n)}%</div><div class="s">turned into a 2nd date</div>
  <div class="tile">🏆 Best date type: <b>${s.best}</b></div><div class="tile">📱 Best app: <b>${ba?ba[0]+' ('+pct(ba[1],ba[2])+'%)':'–'}</b></div><div class="tile">🤝 Mutual interest: <b>${pct(s.mut,s.n)}%</b> · ⭐ avg <b>${s.avg}</b></div>
