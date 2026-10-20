@@ -160,9 +160,9 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <div class="card" id="lockCard"><h2><span class="lk">🔒</span> Compare with LA daters</h2>
  <p>Share your anonymous counts to unlock how you compare with LA daters. Only counts are shared (date type, app, second-date interest, age band, gender, city). Never nicknames, notes or exact dates.</p><p class="muted">Private fields — nickname, notes, where, and any “other” details — are never shared. “Other” answers count only as “other”. Ratings and checkbox categories may be counted.</p>
  <div class="toggle"><input type="checkbox" id="pool"><div><b>Share my anonymous counts (off by default)</b>
- <p class="muted">Peer groups are shown only when they have at least <b>50 contributors</b>. Turn this off anytime to stop sharing and re-lock. <b>In this version nothing is actually sent</b> — there is no server yet. Your personal stats are always free.</p></div></div></div>
+ <p class="muted">Peer numbers are shown only for groups with at least <b>5 dates</b>. Turn this off anytime to stop sharing and re-lock. When on, each reviewed date is sent once as an anonymous row: answer choices, 1–5 numbers, spend bucket and month only — no names, notes, places, text or exact dates. Turning it off stops new uploads; rows already sent can’t be linked back to you and aren’t deleted. Your personal stats are always free.</p></div></div></div>
  <div class="card" id="cmpCard" style="position:relative"><div id="cmpInner"><h2>Compare with LA daters <span class="badge">EXAMPLE DATA</span></h2>
- <p class="muted">Peer numbers below are <b>made-up placeholders</b> to show the design. Real comparisons appear only after enough people opt in. Nothing is sent yet in this version. White line = peer benchmark.</p>
+ <p class="muted">Peer numbers are <b>example placeholders</b> until the anonymous pool has at least 5 dates for that number; then they switch to <b>live</b>. White line = peer benchmark.</p>
  <div class="row"><div style="flex:1;min-width:140px"><label>Age band</label><select id="age"><option>25–29</option><option selected>30–34</option><option>35–39</option><option>40+</option></select></div>
  <div style="flex:1;min-width:140px"><label>Gender</label><select id="gen"><option>Woman</option><option>Man</option><option>Nonbinary</option></select></div>
  <div style="flex:1;min-width:140px"><label>City</label><select disabled><option>Los Angeles</option></select></div></div>
@@ -261,6 +261,7 @@ f.onsubmit=e=>{e.preventDefault();const nick=f.nick.value.trim().slice(0,12);if(
  const sid=editId||Date.now();try{shot?localStorage.setItem(SK+sid,shot):localStorage.removeItem(SK+sid)}catch(e){toast('Screenshot too big to store')}
  if(editId){const d=D.dates.find(x=>x.id==editId);Object.assign(d,r)}else{const p=findP(nick);if(p&&p.last)p.last.second='yes';D.dates.push({id:sid,...r})}
  const was=mode,aa=askAfter&&r.status=='upcoming';askAfter=false;normalize();save();mode=was=='review'?'post':was;resetForm();toast(was=='pre'?'Upcoming date saved ✓':'Saved ✓');render();
+poolSync();
  if(aa)setTimeout(()=>{const b=$(`.ask[data-id="${sid}"]`);if(b){b.scrollIntoView({block:'center'});b.click()}},50)};
 $('#saveAsk').onclick=()=>{askAfter=true;f.requestSubmit?f.requestSubmit():$('#saveBtn').click()};
 function demo(){const T=OPT.type,A=['Hinge','Hinge','Bumble','Tinder','In person','Raya','Set up','At work'];
@@ -327,10 +328,10 @@ function render(){normalize();heroUpd();renderFindings();const s=stats(),all=D.d
  bars('#byType',group(d=>d.type));bars('#byApp',group(d=>d.met));bars('#byOn',group(chan));
  const mo={};ds.forEach(d=>{const m=d.date.slice(0,7);mo[m]=mo[m]||[0,0];mo[m][0]++;if(d._n>1)mo[m][1]++});const ks=Object.keys(mo).sort(),mx=Math.max(1,...ks.map(k=>mo[k][0])),w=300/Math.max(1,ks.length);
  $('#trend').innerHTML=ks.map((k,i)=>`<rect x="${10+i*w+w*.15}" y="${115-95*mo[k][0]/mx}" width="${w*.35}" height="${95*mo[k][0]/mx}" rx="3" fill="#ff5a5f"/><rect x="${10+i*w+w*.5}" y="${115-95*mo[k][1]/mx}" width="${w*.35}" height="${95*mo[k][1]/mx}" rx="3" fill="#ffb347"/><text x="${10+i*w+w/2}" y="132" fill="#8b93a3" font-size="9" text-anchor="middle">${k.slice(5)}/${k.slice(2,4)}</text>`).join('')+'<text x="10" y="10" fill="#8b93a3" font-size="9">■ dates</text><text x="60" y="10" fill="#ffb347" font-size="9">■ repeat dates</text>';
- const AG={'25–29':3,'30–34':0,'35–39':-3,'40+':-6},GN={Woman:-2,Man:2,Nonbinary:0},o=(AG[$('#age').value]||0)+(GN[$('#gen').value]||0),EX={};Object.entries({coffee:22,drinks:31,dinner:38,activity:45,other:28,Online:30,'In person':41,Other:30}).forEach(([k,v])=>EX[k]=v+o);
- $('#cmp').innerHTML='<h3>Your 2nd-date rate vs example peers</h3><div id="c1"></div><h3 style="margin-top:14px">Online vs in person</h3><div id="c2"></div><h3 style="margin-top:14px">Category ratings vs example LA daters</h3><div id="c3"></div><h3 style="margin-top:14px">LA avg spend <span class="badge">EXAMPLE DATA</span></h3><div id="c4"></div><p class="muted">Example benchmarks for '+esc($('#age').value)+' · '+esc($('#gen').value)+' · LA are illustrative only, not survey or user data.'+(ds.length?'':' Log dates to see your bars.')+'</p>';
-  {const LA={looks:3.7,personality:3.5,conversation:3.4,humor:3.2,chemistry:3.0,values:3.1};$('#c3').innerHTML=CATS.map(([k,l])=>{const v=catAvg(ds,k);return`<div class="bar"><span class="l" style="width:120px">${l}</span><span class="t"><span class="f" style="width:${v==null?0:v*20}%;display:block"></span><span class="m" style="left:${LA[k]*20}%"></span></span><span class="v">${f1(v)}<small class="muted"> LA ${LA[k].toFixed(1)}</small></span></div>`}).join('')}
- {const LS={coffee:14,drinks:52,dinner:110,activity:45,other:35};$('#c4').innerHTML=Object.keys(LS).map(k=>{const v=avg(ds.filter(d=>d.type==k&&hasSp(d)).map(d=>d.spend));return`<div class="bar"><span class="l">${k}</span><span class="t"><span class="f" style="width:${v==null?0:Math.min(100,v/1.5)}%;display:block"></span><span class="m" style="left:${LS[k]/1.5}%"></span></span><span class="v">${money(v)}<small class="muted"> LA ${money(LS[k])}</small></span></div>`}).join('')+'<p class="muted" style="font-size:12px">LA figures are made-up placeholders, not real data.</p>'}
+ const AG={'25–29':3,'30–34':0,'35–39':-3,'40+':-6},GN={Woman:-2,Man:2,Nonbinary:0},o=(AG[$('#age').value]||0)+(GN[$('#gen').value]||0),EX={};Object.entries({coffee:22,drinks:31,dinner:38,activity:45,other:28,Online:30,'In person':41,Other:30}).forEach(([k,v])=>EX[k]=v+o);const LV=D.pool&&PS?PS:{},liveK=[];Object.entries({...(LV.by_type||{}),...(LV.by_channel||{})}).forEach(([k,v])=>{if(v&&v.n>=5&&v.rate!=null){EX[k]=+v.rate;liveK.push(k)}});
+ $('#cmp').innerHTML='<h3>Your 2nd-date rate vs example peers</h3><div id="c1"></div><h3 style="margin-top:14px">Online vs in person</h3><div id="c2"></div><h3 style="margin-top:14px">Category ratings vs example LA daters</h3><div id="c3"></div><h3 style="margin-top:14px">LA avg spend <span class="badge">EXAMPLE DATA</span></h3><div id="c4"></div><p class="muted">'+(liveK.length?'<b>Live</b> pooled rates (5+ dates each) for: '+esc(liveK.join(', '))+'. Everything else is an ':'All peer numbers are ')+'example placeholder for '+esc($('#age').value)+' · '+esc($('#gen').value)+' · LA, not real data.'+(LV.n!=null?' Pool size: '+LV.n+' dates.':'')+(ds.length?'':' Log dates to see your bars.')+'</p>';
+  {const LA={looks:3.7,personality:3.5,conversation:3.4,humor:3.2,chemistry:3.0,values:3.1},LC={};Object.entries(LV.cats||{}).forEach(([k,v])=>{if(v.n>=5&&k in LA){LA[k]=+v.avg;LC[k]=1}});$('#c3').innerHTML=CATS.map(([k,l])=>{const v=catAvg(ds,k);return`<div class="bar"><span class="l" style="width:120px">${l}</span><span class="t"><span class="f" style="width:${v==null?0:v*20}%;display:block"></span><span class="m" style="left:${LA[k]*20}%"></span></span><span class="v">${f1(v)}<small class="muted"> ${LC[k]?'live':'LA'} ${LA[k].toFixed(1)}</small></span></div>`}).join('')}
+ {const LS={coffee:14,drinks:52,dinner:110,activity:45,other:35},LL={};Object.entries(LV.spend||{}).forEach(([k,v])=>{if(v.n>=5&&k in LS){LS[k]=+v.avg;LL[k]=1}});$('#c4').innerHTML=Object.keys(LS).map(k=>{const v=avg(ds.filter(d=>d.type==k&&hasSp(d)).map(d=>d.spend));return`<div class="bar"><span class="l">${k}</span><span class="t"><span class="f" style="width:${v==null?0:Math.min(100,v/1.5)}%;display:block"></span><span class="m" style="left:${LS[k]/1.5}%"></span></span><span class="v">${money(v)}<small class="muted"> ${LL[k]?'live':'LA'} ${money(LS[k])}</small></span></div>`}).join('')+'<p class="muted" style="font-size:12px">'+(Object.keys(LL).length?'“live” = real pooled averages from spend buckets (5+ dates). ':'')+'“LA” figures are made-up placeholders, not real data.</p>'}
  bars('#c1',group(d=>d.type),EX);bars('#c2',group(chan),EX);$('#pool').checked=!!D.pool;document.body.classList.toggle('locked',!D.pool);
  const ba=group(d=>d.met).filter(r=>chan({met:r[0]})=='Online'&&r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2])[0];
  $('#lbTab').innerHTML=lbHtml();
@@ -349,14 +350,14 @@ $('#list').onchange=e=>{if(e.target.classList.contains('oc'))setOc(e.target.data
 $('#demo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo).concat(demo());save();render()};$('#demo2').onclick=()=>{$('#demo').click();location.hash='#dash'};
 $('#clearDemo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo);save();render();toast('Demo data cleared')};
 $('#reset').onclick=()=>{if(confirm('Delete ALL dates (demo and real) from this browser?')){D.dates=[];resetForm();save();render()}};
-$('#pool').onchange=e=>{D.pool=e.target.checked;save();render();toast(D.pool?'Unlocked (nothing is sent in this version)':'Sharing off — compare locked')};
+$('#pool').onchange=e=>{D.pool=e.target.checked;save();render();toast(D.pool?'Sharing on — anonymous rows are sent':'Sharing off — nothing new is sent');if(D.pool){poolSync();psT=0;loadPooled()}};
 $('#age').onchange=$('#gen').onchange=()=>{D.age=$('#age').value;D.gen=$('#gen').value;save();render()};if(D.age)$('#age').value=D.age;if(D.gen)$('#gen').value=D.gen;
 
 // ---- Call it (friend predictions, no backend) ----
 const APP=location.origin+location.pathname;const FOOT=`<div class="foot">Track your own dates on <a href="${APP}" target="_blank">Datelog</a> — ${APP.replace(/^https?:\/\//,'')}</div>`;
 const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const dec=t=>{try{return JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return null}};
-const ask=d=>{if(!d.cid){d.cid=Math.random().toString(36).slice(2,10);save()}return{v:1,t:d.cid,s:ME()||undefined,n:d.nick,ty:d.type,m:d.met,dr:(d.draw||[]).slice(),ex:d.excite,h:(d.hoping||[]).slice()}};// never where/notes/other-detail/date
+const ask=d=>{if(!d.cid){d.cid=Math.random().toString(36).slice(2,10);save()}if(!d.ck){d.ck=rhex(16);save()}return{v:1,t:d.cid,k:d.ck,s:ME()||undefined,n:d.nick,ty:d.type,m:d.met,dr:(d.draw||[]).slice(),ex:d.excite,h:(d.hoping||[]).slice()}};// never where/notes/other-detail/date
 const d2f=(u,n)=>{const[h,b]=u.split(','),bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new File([a],n,{type:h.match(/:(.*?);/)[1]})};
 function cardPNG(o,name){return new Promise(ok=>{const S=1080,P=110,MW=S-2*P,c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d'),FF='-apple-system,system-ui,"Segoe UI",Roboto,sans-serif';
  const g=x.createLinearGradient(0,0,S,S);g.addColorStop(0,'#6d28d9');g.addColorStop(.55,'#c026d3');g.addColorStop(1,'#f43f5e');x.fillStyle=g;x.fillRect(0,0,S,S);
@@ -391,11 +392,14 @@ function friendView(a){const fs=(n,o)=>`<div class="fseg" data-q="${n}">${o.map(
  if(!a||!a.t)return;$('#friendCard').onclick=e=>{const b=e.target.closest('.fseg button');if(b){$$('button',b.parentNode).forEach(x=>x.classList.toggle('on',x===b))}};
  $('#fSend').onclick=()=>{const g=q=>{const o=$(`.fseg[data-q=${q}] .on`,$('#friendCard'));return o?o.textContent:null},f=$('#fName').value.trim().slice(0,12),take=$('#fTake').value.trim().slice(0,80),r={v:1,t:a.t,f,p2:g('p2'),pw:+g('pw')||null,pm:g('pm'),take};
   if(!r.p2||!r.pw||!r.pm){toast('Make all three calls');return}if(!f){toast('Add your name or initials');return}if(BAD.test(f+' '+take)){toast('No phone, email or links please');return}
-  showLink('Send this back to your friend',APP+'#reply='+enc(r),'Text this link to your friend so your call gets saved on their Datelog.')}}
+  const rl=APP+'#reply='+enc(r),fb=()=>showLink('Send this back to your friend',rl,'Text this link to your friend so your call gets saved on their Datelog.');
+  if(!a.k||!/^[0-9a-f]{32,64}$/.test(a.k))return fb();const btn=$('#fSend');btn.disabled=true;btn.textContent='Locking in…';
+  sbPost('call_guesses',{call_id:a.k,friend_name:f,guess:{p2:r.p2,pw:r.pw,pm:r.pm,...(take?{take}:{})}}).then(()=>{btn.textContent='Locked in ✓';showLink('🔮 Locked in!',rl,'Your call was sent — it will show up in your friend’s Datelog automatically. If they don’t see it, text them this backup link.')},()=>{btn.disabled=false;btn.textContent='Lock in my call';fb()})}}
 function importReply(r){const d=r&&D.dates.find(x=>x.cid&&x.cid===r.t);if(!d){toast('No matching date on this device');return}
  if(!r.f||BAD.test((r.f||'')+' '+(r.take||''))){toast('Prediction rejected');return}
  const p={f:String(r.f).slice(0,12),p2:['yes','no'].includes(r.p2)?r.p2:null,pw:Math.min(5,Math.max(1,+r.pw||3)),pm:['you','them','both','neither'].includes(r.pm)?r.pm:null,take:String(r.take||'').slice(0,80)};
- d.preds=(d.preds||[]).filter(x=>x.f.toLowerCase()!==p.f.toLowerCase()).concat(p);save();render();toast('🔮 '+p.f+'’s call saved for '+d.nick)}
+ addPred(d,p);save();render();toast('🔮 '+p.f+'’s call saved for '+d.nick)}
+function addPred(d,p){const o=(d.preds||[]).find(x=>x.f.toLowerCase()===p.f.toLowerCase());if(o&&o.p2==p.p2&&o.pw==p.pw&&o.pm==p.pm&&(o.take||'')==(p.take||''))return false;d.preds=(d.preds||[]).filter(x=>x!==o).concat(p);return true}
 const actMore=d=>{if(!d.mine||!d.theirs||d.theirs=='unknown')return null;const a=d.mine=='yes',b=d.theirs=='yes';return a&&b?'both':a?'you':b?'them':'neither'};
 function scorePred(d,p){const parts=[],L=[];
  if(d.second=='yes'||d.second=='no'){const r=p.p2==d.second;parts.push(r?1:0);L.push(`called ${p.p2=='yes'?'a':'no'} 2nd date: ${r?'right ✅':'wrong ❌'}`)}
@@ -425,7 +429,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.ask');if(!b)ret
 function route(){let h=(location.hash||(D.dates.length?'#log':'#home')).slice(1),v=h,arg='';const i=h.indexOf('=');if(i>0){v=h.slice(0,i);arg=h.slice(i+1)}
  if(v=='reply'){importReply(dec(arg));history.replaceState(null,'','#log');v='log'}
  if(v=='callit')friendView(dec(arg));if(v=='verdict')verdict(arg);if(!['home','log','dash','compare','card','callit','verdict'].includes(v))v='log';
- const sec={callit:'friend',verdict:'verdict'}[v]||v;['home','log','dash','compare','card','friend','verdict'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=sec));$('nav').classList.toggle('hide',v=='callit');$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v));if(window._sec!==sec){if(window._sec)scrollTo(0,0);window._sec=sec}$('#askBox').classList.add('hide')}
+ const sec={callit:'friend',verdict:'verdict'}[v]||v;['home','log','dash','compare','card','friend','verdict'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=sec));$('nav').classList.toggle('hide',v=='callit');$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v));if(['log','card','dash','verdict'].includes(v))syncGuesses();if(v=='compare')loadPooled();if(window._sec!==sec){if(window._sec)scrollTo(0,0);window._sec=sec}$('#askBox').classList.add('hide')}
 $('#meName').value=D.me||'';$('#meName').onchange=e=>{D.me=e.target.value.trim().slice(0,20);save();toast('Saved')};
 function heroUpd(){$('#heroGo').textContent=D.dates.length?'Log a date →':'Log your first date →';
  const b=$('#bkNote');if(b){const L=D.lastBackup;b.classList.toggle('hide',!D.dates.some(d=>!d.demo)||!!(L&&Date.now()-L<30*864e5));$('#bkLast').textContent=L?new Date(L).toLocaleDateString():'never'}}
@@ -445,6 +449,23 @@ $('#bkIn').onchange=async e=>{const fl=e.target.files[0];e.target.value='';if(!f
  else{const ids=new Set(D.dates.map(d=>String(d.id)));let n=0;nd.dates.forEach(d=>{if(!ids.has(String(d.id))){D.dates.push(d);n++}});['me','age','gen'].forEach(k=>{if(D[k]==null&&nd[k]!=null)D[k]=nd[k]});toast('Merged '+n+' new dates')}
  Object.entries(sh).forEach(([id,u])=>{if(D.dates.some(d=>String(d.id)==id)&&!localStorage.getItem(SK+id))try{localStorage.setItem(SK+id,u)}catch(x){}});
  D.dates.forEach(d=>{['why','they','hoping','concerns','draw'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});d.concernsRight=d.concernsRight||{}});normalize();save();resetForm();render();heroUpd();if(how=='replace')toast('Backup restored ✓')};
+// ---- Supabase (publishable key, anon role; RLS + RPCs on the server) ----
+const SB={url:'https://gjtpiszuadcvsxblmogt.supabase.co',key:'sb_publishable_YaqJwehqSogqINz5Q1vFHA_4ZA-2uKM'};
+const rhex=n=>[...crypto.getRandomValues(new Uint8Array(n))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const ruuid=()=>crypto.randomUUID?crypto.randomUUID():rhex(16).replace(/^(.{8})(.{4})(.{4})(.{4})/,'$1-$2-4$3-$4-').slice(0,36);
+function sbReq(path,body){const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);return fetch(SB.url+'/rest/v1/'+path,{method:'POST',signal:c.signal,headers:{apikey:SB.key,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(body)}).finally(()=>clearTimeout(t))}
+const sbPost=(t,row)=>sbReq(t,row).then(r=>{if(!r.ok&&r.status!=409)throw new Error('HTTP '+r.status);return r.status});
+const sbRpc=(fn,args)=>sbReq('rpc/'+fn,args||{}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()});
+let syncT={};async function syncGuesses(force){const now=Date.now(),lim=now-60*864e5;const ds=D.dates.filter(d=>d.ck&&(d.status=='upcoming'||new Date(d.date)>=lim)).slice(-20);let added=[];
+ await Promise.all(ds.map(async d=>{if(!force&&syncT[d.id]&&now-syncT[d.id]<30000)return;syncT[d.id]=now;try{const rows=await sbRpc('get_guesses',{p_call_id:d.ck});(rows||[]).forEach(r=>{const g=r.guess||{},f=String(r.friend_name||'').slice(0,12);if(!f||BAD.test(f+' '+(g.take||'')))return;
+  const p={f,p2:['yes','no'].includes(g.p2)?g.p2:null,pw:Math.min(5,Math.max(1,+g.pw||3)),pm:['you','them','both','neither'].includes(g.pm)?g.pm:null,take:String(g.take||'').slice(0,80)};if(addPred(d,p))added.push(f+' → '+d.nick)})}catch(e){}}));
+ if(added.length){save();render();toast('🔮 New call'+(added.length>1?'s':'')+': '+added.slice(0,3).join(', '))}return added}
+function poolRow(d){const r=poolRecord(d),c=cleanCats(d.cats),lab=(a,k)=>(a||[]).filter(x=>OPT[k].includes(x));return{row_id:d.pid,month:String(d.date||'').slice(0,7),date_num:Math.min(50,r.dateNum||1),date_type:OPT.type.includes(r.type)?r.type:'other',met:r.met,channel:r.channel,excite:r.excite||null,went:r.went||null,rating:r.rating||null,mine:r.mine||null,theirs:r.theirs||null,second:r.second||null,
+ cat_looks:c.looks||null,cat_personality:c.personality||null,cat_conversation:c.conversation||null,cat_humor:c.humor||null,cat_chemistry:c.chemistry||null,cat_values:c.values||null,spend_bucket:spBucket(hasSp(d)?d.spend:null),paid:OPT.paid.includes(d.paid)?d.paid:null,exp_paid:OPT.expPaid.includes(d.expPaid)?d.expPaid:null,
+ draw:lab(r.draw,'draw'),hoping:lab(r.hoping,'hoping'),concerns:lab(r.concerns,'concerns'),why:lab(r.why,'why'),they:lab(r.they,'they'),age_band:r.ageBand||null,gender:r.gender||null,city:'Los Angeles'}}
+let poolBusy=false;async function poolSync(){if(!D.pool||poolBusy)return;poolBusy=true;D.pooled=D.pooled||[];let n=0;try{people(true);for(const d of D.dates.filter(d=>d.status=='done'&&!d.demo)){if(!d.pid){d.pid=ruuid();save()}if(D.pooled.includes(d.pid))continue;try{await sbPost('pooled_dates',poolRow(d));D.pooled.push(d.pid);save();n++}catch(e){}}}finally{poolBusy=false}return n}
+let PS=null,psT=0;async function loadPooled(){if(!D.pool||Date.now()-psT<60000)return;psT=Date.now();try{PS=await sbRpc('pooled_summary');render()}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncGuesses()});
 // ---- Key findings + Ask your data (templates, on-device) ----
 const INS=(()=>{const r1=x=>Math.round(x*10)/10,sg=x=>(x>0?'+':'')+r1(x).toFixed(1);
  const res=()=>people().filter(p=>p.resolved&&!p.first.demo||p.resolved&&p.first.demo);
@@ -488,5 +509,5 @@ $('#qchips').innerHTML=INS.CH.map(([q,k])=>`<button type="button" data-k="${k}">
 function askAdd(q,a){const L=$('#askLog');L.insertAdjacentHTML('beforeend',`<div class="bub me">${esc(q)}</div><div class="bub them">${esc(a)}</div>`);L.scrollTop=L.scrollHeight;L.lastElementChild.scrollIntoView({block:'nearest'})}
 $('#qchips').onclick=e=>{const b=e.target.closest('button');if(!b)return;askAdd(b.textContent,INS.I.find(x=>x[0]==b.dataset.k)[2]())};
 $('#askF').onsubmit=e=>{e.preventDefault();const q=$('#askQ').value.trim();if(!q)return;$('#askQ').value='';const a=INS.answer(q);askAdd(q,a||'I can’t answer that one yet. Try: '+INS.CH.slice(0,4).map(x=>'“'+x[0]+'”').join(', ')+' — or tap a chip above.')};
-window.onhashchange=route;normalize();save();resetForm();render();route();heroUpd();
+window.onhashchange=route;normalize();save();resetForm();render();route();heroUpd();poolSync();
 </script></body></html>
