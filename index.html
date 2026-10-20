@@ -29,7 +29,7 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
 .hide{display:none}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#022;padding:10px 16px;border-radius:10px;font-weight:700}
 @media(max-width:560px){.seg button{min-width:0;padding:9px 4px;font-size:13px}nav a{margin-left:9px;font-size:13px}.bar .l{width:80px}}
 #lockOv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:rgba(15,17,21,.35)}
-.locked #cmpInner{filter:blur(7px);pointer-events:none;user-select:none}body:not(.locked) #lockOv{display:none}body:not(.locked) #lockCard h2::before{content:"🔓 "}
+.locked #cmpInner{filter:blur(7px);pointer-events:none;user-select:none}body:not(.locked) #lockOv{display:none}body:not(.locked) .lk{display:none}body:not(.locked) #lockCard h2::before{content:"🔓"}
 </style></head><body>
 <header><div class="logo">date<span>log</span></div><nav><a href="#log">Log</a><a href="#dash">Stats</a><a href="#compare">Compare</a><a href="#card">Share</a></nav></header>
 <main>
@@ -65,7 +65,7 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <div class="card"><h3>Trend (dates & 2nd dates / month)</h3><svg id="trend" viewBox="0 0 320 140" width="100%"></svg></div></div></div>
 </section>
 <section id="v-compare" class="hide">
- <div class="card" id="lockCard"><h2>🔒 Compare with LA daters</h2>
+ <div class="card" id="lockCard"><h2><span class="lk">🔒</span> Compare with LA daters</h2>
  <p>Share your anonymous counts to unlock how you compare with LA daters. Only counts are shared (date type, app, second-date interest, age band, gender, city). Never nicknames, notes or exact dates.</p>
  <div class="toggle"><input type="checkbox" id="pool"><div><b>Share my anonymous counts (off by default)</b>
  <p class="muted">Peer groups are shown only when they have at least <b>50 contributors</b>. Turn this off anytime to stop sharing and re-lock. <b>In this version nothing is actually sent</b> — there is no server yet. Your personal stats are always free.</p></div></div></div>
