@@ -8,7 +8,7 @@ KEY=sb_publishable_YaqJwehqSogqINz5Q1vFHA_4ZA-2uKM
 CID=$(head -c16 /dev/urandom | od -An -tx1 | tr -d ' \n')
 H=(-H "apikey: $KEY" -H "Content-Type: application/json")
 pass=0; fail=0
-chk(){ if [ "$2" = "$3" ]; then echo "PASS  $1 ($2)"; pass=$((pass+1)); else echo "FAIL  $1 (got $2, want $3) $4"; fail=$((fail+1)); fi; }
+chk(){ if [ "$2" = "$3" ]; then echo "PASS  $1 ($2)"; pass=$((pass+1)); else echo "FAIL  $1 (got $2, want $3) ${4:-}"; fail=$((fail+1)); fi; }
 req(){ curl -s -o /tmp/sbv.out -w '%{http_code}' "$@"; }
 
 c=$(req -X POST "$URL/rest/v1/call_guesses" "${H[@]}" -H "Prefer: return=minimal" \
