@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Datelog — your private dating stats</title>
+<link rel="icon" href="data:,"><title>Datelog — your private dating stats</title>
 <style>
 :root{--bg:#0f1115;--card:#181b22;--line:#262a33;--tx:#e9ecf1;--mu:#8b93a3;--ac:#ff5a5f;--ac2:#ffb347;--ok:#3ecf8e}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx)}
@@ -55,12 +55,12 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <div class="row" style="margin-top:12px"><button class="btn g" id="demo">Load demo data</button><button class="btn g" id="reset">Reset all data</button><span class="muted" id="demoNote"></span></div></div>
 </section>
 <section id="v-dash" class="hide">
- <div class="card"><h2>Your dating stats</h2><div class="kpis" id="kpis"></div></div>
+ <div class="card hide" id="empty"><h2>No dates yet</h2><p class="muted">Your stats appear here once you log a date. <a href="#log" style="color:var(--ac)">Log one</a> or load demo data.</p></div><div id="dashBody"><div class="card"><h2>Your dating stats</h2><div class="kpis" id="kpis"></div></div>
  <div class="card"><h3>Second-date funnel</h3><div id="funnel"></div></div>
  <div class="grid"><div class="card"><h3>2nd-date rate by date type</h3><div id="byType"></div></div>
  <div class="card"><h3>2nd-date rate by app</h3><div id="byApp"></div></div></div>
  <div class="grid"><div class="card"><h3>Online vs in person</h3><div id="byOn"></div></div>
- <div class="card"><h3>Trend (dates & 2nd dates / month)</h3><svg id="trend" viewBox="0 0 320 140" width="100%"></svg></div></div>
+ <div class="card"><h3>Trend (dates & 2nd dates / month)</h3><svg id="trend" viewBox="0 0 320 140" width="100%"></svg></div></div></div>
 </section>
 <section id="v-compare" class="hide">
  <div class="card"><h2>Compare with LA daters <span class="badge">EXAMPLE DATA</span></h2>
@@ -91,7 +91,8 @@ function toast(t){const e=document.createElement('div');e.className='toast';e.te
 document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{if(e.target.tagName!='BUTTON')return;const on=e.target.classList.contains('on');g.querySelectorAll('button').forEach(b=>b.classList.remove('on'));if(!(on&&g.dataset.n=='rating'))e.target.classList.add('on')}));
 function seg(n){const b=document.querySelector(`.seg[data-n=${n}] .on`);return b?b.textContent:null}
 const f=$('#f');f.date.value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
-f.onsubmit=e=>{e.preventDefault();const r={id:Date.now(),date:f.date.value,nick:f.nick.value.trim().slice(0,12),met:f.met.value,type:seg('type'),mine:seg('mine'),theirs:seg('theirs'),second:seg('second'),rating:+seg('rating')||null,note:f.note.value.trim()};
+f.onsubmit=e=>{e.preventDefault();if(!f.nick.value.trim()){toast('Add a nickname or initials');return}
+ const r={id:Date.now(),date:f.date.value,nick:f.nick.value.trim().slice(0,12),met:f.met.value,type:seg('type'),mine:seg('mine'),theirs:seg('theirs'),second:seg('second'),rating:+seg('rating')||null,note:f.note.value.trim()};
  if(!r.type||!r.mine||!r.theirs||!r.second){toast('Pick type, interest & outcome');return}
  if(/\d{3}.?\d{3}.?\d{4}|@|https?:/i.test(r.nick+r.note)){toast('No contact info please');return}
  D.dates.push(r);save();f.reset();f.date.value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);document.querySelectorAll('.seg .on').forEach(b=>b.classList.remove('on'));toast('Saved ✓');render()};
@@ -102,22 +103,24 @@ function bars(el,rows,bench){$(el).innerHTML=rows.length?rows.map(([l,a,b])=>{co
 function group(fn){const g={};D.dates.forEach(d=>{const k=fn(d);g[k]=g[k]||[0,0];g[k][1]++;if(d.second=='yes')g[k][0]++});return Object.entries(g).map(([k,[a,b]])=>[k,a,b]).sort((x,y)=>y[2]-x[2])}
 function stats(){const ds=D.dates,n=ds.length,sec=ds.filter(d=>d.second=='yes').length,want=ds.filter(d=>d.mine=='yes').length,mut=ds.filter(d=>d.mine=='yes'&&d.theirs=='yes').length,rt=ds.filter(d=>d.rating);
  const bt=group(d=>d.type).filter(r=>r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2]);return{n,sec,want,mut,avg:rt.length?(rt.reduce((s,d)=>s+d.rating,0)/rt.length).toFixed(1):'–',best:bt[0]?bt[0][0]:'–',people:new Set(ds.map(d=>d.nick)).size}}
-function render(){const s=stats(),ds=D.dates;
- $('#list').innerHTML='<tr><th>Date</th><th>Who</th><th>Met</th><th>Type</th><th>2nd?</th></tr>'+ds.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(d=>`<tr><td>${d.date}</td><td>${esc(d.nick)}</td><td>${d.met}</td><td>${d.type}</td><td>${d.second=='yes'?'✅':'—'}</td></tr>`).join('');
+function render(){const s=stats(),ds=D.dates;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
+ $('#list').innerHTML='<tr><th>Date</th><th>Who</th><th>Met</th><th>Type</th><th>2nd?</th><th></th></tr>'+(ds.length?'':'<tr><td colspan=6 class="muted">No dates yet — log your first one above, or load demo data.</td></tr>')+ds.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(d=>`<tr><td>${d.date}</td><td>${esc(d.nick)}</td><td>${d.met}</td><td>${d.type}</td><td>${d.second=='yes'?'✅':'—'}</td><td><button class="btn g del" data-id="${d.id}" style="padding:4px 9px" title="Delete">✕</button></td></tr>`).join('');
  $('#demoNote').textContent=ds.some(d=>d.demo)?'Showing fake DEMO-* dates.':'';
  $('#kpis').innerHTML=[[s.n,'first dates logged'],[pct(s.sec,s.n)+'%','2nd-date rate'],[pct(s.mut,s.n)+'%','mutual interest'],[s.avg,'avg rating'],[s.best,'best date type']].map(([v,l])=>`<div class="kpi"><b>${v}</b><small>${l}</small></div>`).join('');
  bars('#funnel',[['Dates',s.n,s.n],['I wanted 2nd',s.want,s.n],['Mutual yes',s.mut,s.n],['2nd happened',s.sec,s.n]]);
  bars('#byType',group(d=>d.type));bars('#byApp',group(d=>d.met).filter(r=>r[0]!='In person'));bars('#byOn',group(d=>d.met=='In person'?'In person':'Online'));
  const mo={};ds.forEach(d=>{const m=d.date.slice(0,7);mo[m]=mo[m]||[0,0];mo[m][0]++;if(d.second=='yes')mo[m][1]++});const ks=Object.keys(mo).sort(),mx=Math.max(1,...ks.map(k=>mo[k][0])),w=300/Math.max(1,ks.length);
  $('#trend').innerHTML=ks.map((k,i)=>`<rect x="${10+i*w+w*.15}" y="${115-95*mo[k][0]/mx}" width="${w*.35}" height="${95*mo[k][0]/mx}" rx="3" fill="#ff5a5f"/><rect x="${10+i*w+w*.5}" y="${115-95*mo[k][1]/mx}" width="${w*.35}" height="${95*mo[k][1]/mx}" rx="3" fill="#ffb347"/><text x="${10+i*w+w/2}" y="132" fill="#8b93a3" font-size="9" text-anchor="middle">${k.slice(5)}/${k.slice(2,4)}</text>`).join('')+'<text x="10" y="10" fill="#8b93a3" font-size="9">■ dates  </text><text x="60" y="10" fill="#ffb347" font-size="9">■ 2nd dates</text>';
- const EX={coffee:22,drinks:31,dinner:38,activity:45,other:28,Online:30,'In person':41};
- $('#cmp').innerHTML='<h3>Your 2nd-date rate vs example peers</h3><div id="c1"></div><h3 style="margin-top:14px">Online vs in person</h3><div id="c2"></div><p class="muted">Example benchmarks are illustrative only, not survey or user data.</p>';
+ const AG={'25–29':3,'30–34':0,'35–39':-3,'40+':-6},GN={Woman:-2,Man:2,Nonbinary:0},o=(AG[$('#age').value]||0)+(GN[$('#gen').value]||0),EX={};Object.entries({coffee:22,drinks:31,dinner:38,activity:45,other:28,Online:30,'In person':41}).forEach(([k,v])=>EX[k]=v+o);
+ $('#cmp').innerHTML='<h3>Your 2nd-date rate vs example peers</h3><div id="c1"></div><h3 style="margin-top:14px">Online vs in person</h3><div id="c2"></div><p class="muted">Example benchmarks for '+$('#age').value+' · '+$('#gen').value+' · LA are illustrative only, not survey or user data.'+(ds.length?'':' Log dates to see your bars.')+'</p>';
  bars('#c1',group(d=>d.type),EX);bars('#c2',group(d=>d.met=='In person'?'In person':'Online'),EX);$('#pool').checked=!!D.pool;
  const ba=group(d=>d.met).filter(r=>r[0]!='In person'&&r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2])[0];
  $('#shareCard').innerHTML=`<div style="font-weight:800;letter-spacing:.1em;font-size:13px">DATELOG · MY 2026</div><div style="margin-top:26px" class="big">${s.n}</div><div class="s">first dates</div><div style="margin-top:18px" class="big">${pct(s.sec,s.n)}%</div><div class="s">turned into a 2nd date</div>
  <div class="tile">🏆 Best date type: <b>${s.best}</b></div><div class="tile">📱 Best app: <b>${ba?ba[0]+' ('+pct(ba[1],ba[2])+'%)':'–'}</b></div><div class="tile">🤝 Mutual interest: <b>${pct(s.mut,s.n)}%</b> · ⭐ avg <b>${s.avg}</b></div>
- <div style="margin-top:auto" class="s">${ds.some(d=>d.demo)?'demo data · ':''}datelog — track your dating like a runner tracks miles</div>`}
+ <div style="margin-top:auto" class="s">${ds.length?'':'no dates logged yet · '}${ds.some(d=>d.demo)?'demo data · ':''}datelog — track your dating like a runner tracks miles</div>`}
 function esc(t){return String(t).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';')}
 function route(){const v=(location.hash||'#log').slice(1);['log','dash','compare','card'].forEach(x=>{$('#v-'+x).classList.toggle('hide',x!=v)});document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v))}
+$('#list').onclick=e=>{const b=e.target.closest('.del');if(b&&confirm('Delete this date?')){D.dates=D.dates.filter(d=>String(d.id)!==b.dataset.id);save();render()}};
+$('#age').onchange=$('#gen').onchange=()=>{D.age=$('#age').value;D.gen=$('#gen').value;save();render()};if(D.age)$('#age').value=D.age;if(D.gen)$('#gen').value=D.gen;
 window.onhashchange=route;render();route();
 </script></body></html>
