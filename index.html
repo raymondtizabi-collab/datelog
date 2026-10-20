@@ -340,7 +340,7 @@ function render(){normalize();heroUpd();renderFindings();const s=stats(),all=D.d
  <div style="margin-top:auto" class="s">${ds.length?'':'no dates logged yet · '}${all.some(d=>d.demo)?'demo data · ':''}datelog — track your dating like a runner tracks miles</div>${FOOT}`}
 // Pooled representation: categories & ratings only. Never nickname, note, where, any *Other detail, exact date/time.
 const oc=a=>(a||[]).slice();
-function poolRecord(d){return{dateNum:d._n||1,status:d.status,type:d.type,met:d.met,channel:chan(d),draw:(d._n||1)==1?oc(d.draw):[],excite:d.excite,hoping:oc(d.hoping),concerns:oc(d.concerns),concernsRight:{...d.concernsRight},went:d.went,mine:d.mine,theirs:d.theirs,why:oc(d.why),they:oc(d.they),second:d.second,rating:d.rating,...(D.pool?{cats:cleanCats(d.cats),spendBucket:spBucket(hasSp(d)?d.spend:null),paid:OPT.paid.includes(d.paid)?d.paid:null,expPaid:OPT.expPaid.includes(d.expPaid)?d.expPaid:null}:{}),ageBand:D.age||$('#age').value,gender:D.gen||$('#gen').value,city:'Los Angeles'}}
+function poolRecord(d){return{dateNum:d._n||1,status:d.status,type:d.type,met:d.met,channel:chan(d),draw:(d._n||1)==1?oc(d.draw):[],excite:d.excite,hoping:oc(d.hoping),concerns:oc(d.concerns),concernsRight:{...d.concernsRight},went:d.went,mine:d.mine,theirs:d.theirs,why:oc(d.why),they:oc(d.they),second:d.second,rating:d.rating,...(D.pool?{cats:cleanCats(d.cats),spendBucket:spBucket(hasSp(d)?d.spend:null),paid:OPT.paid.includes(d.paid)?d.paid:null,expPaid:OPT.expPaid.includes(d.expPaid)?d.expPaid:null}:{}),ageBand:D.age||null,gender:D.gen||null,city:'Los Angeles'}}
 window.poolPreview=()=>{people(true);return D.dates.map(poolRecord)};
 function setOc(id,v){const d=D.dates.find(x=>String(x.id)===String(id));if(d){d.second=v;save();render();toast('Updated: 2nd date '+v);if(v=='no')openForm(id,'review')}}
 document.addEventListener('click',e=>{const t=e.target.closest('.rev,.edt,.del,.oc2');if(!t)return;const id=t.dataset.id;
@@ -351,7 +351,7 @@ $('#demo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo).concat(demo());save()
 $('#clearDemo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo);save();render();toast('Demo data cleared')};
 $('#reset').onclick=()=>{if(confirm('Delete ALL dates (demo and real) from this browser?')){D.dates=[];resetForm();save();render()}};
 $('#pool').onchange=e=>{D.pool=e.target.checked;save();render();toast(D.pool?'Sharing on — anonymous rows are sent':'Sharing off — nothing new is sent');if(D.pool){poolSync();psT=0;loadPooled()}};
-$('#age').onchange=$('#gen').onchange=()=>{D.age=$('#age').value;D.gen=$('#gen').value;save();render()};if(D.age)$('#age').value=D.age;if(D.gen)$('#gen').value=D.gen;
+$('#age').onchange=()=>{D.age=$('#age').value;save();render()};$('#gen').onchange=()=>{D.gen=$('#gen').value;save();render()};if(D.age)$('#age').value=D.age;if(D.gen)$('#gen').value=D.gen;
 
 // ---- Call it (friend predictions, no backend) ----
 const APP=location.origin+location.pathname;const FOOT=`<div class="foot">Track your own dates on <a href="${APP}" target="_blank">Datelog</a> — ${APP.replace(/^https?:\/\//,'')}</div>`;
