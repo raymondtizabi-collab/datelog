@@ -1,5 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" href="data:,"><title>Datelog — your private dating stats</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,">
+<title>Datelog — your private dating stats</title>
 <style>
 :root{--bg:#0f1115;--card:#181b22;--line:#262a33;--tx:#e9ecf1;--mu:#8b93a3;--ac:#ff5a5f;--ac2:#ffb347;--ok:#3ecf8e}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx)}
@@ -30,45 +30,70 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
 @media(max-width:560px){.seg button{min-width:0;padding:9px 4px;font-size:13px}nav a{margin-left:9px;font-size:13px}.bar .l{width:80px}}
 #lockOv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:rgba(15,17,21,.35)}
 .locked #cmpInner{filter:blur(7px);pointer-events:none;user-select:none}body:not(.locked) #lockOv{display:none}body:not(.locked) .lk{display:none}body:not(.locked) #lockCard h2::before{content:"🔓"}
+.pc{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:#1c2028}.pc summary{cursor:pointer;margin-top:8px}.dr{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:13px}.st{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:#2a2f3a}.st.seeing-again{background:#1f4d3a;color:#7ff0b8}.st.ended{color:var(--mu)}.st.pending{background:#4d3a1f;color:#ffd08a}
+
+.fld{margin-top:14px}.seg.multi button{flex:0 1 auto}.oth{margin-top:6px}.ins{font-weight:600;font-size:14px}.nud{border-color:var(--ac2)}.pc.up{border-color:#6a4fd0}.st.upcoming{background:#3a2f66;color:#cbbcff}
+.cr .seg button{padding:5px}
 </style></head><body>
 <header><div class="logo">date<span>log</span></div><nav><a href="#log">Log</a><a href="#dash">Stats</a><a href="#compare">Compare</a><a href="#card">Share</a></nav></header>
 <main>
 <section id="v-log">
- <div class="card hide" id="nudge" style="border-color:var(--ac2)"></div>
- <div class="card"><h2>Log a date <span class="muted">· ~30 seconds</span></h2>
- <p class="muted">Nickname or initials only. No full names, photos or contact info — this is about <i>your</i> patterns.</p>
- <form id="f"><div class="grid">
+ <div id="nudges"></div>
+ <div class="card" id="formCard"><div class="row" style="justify-content:space-between"><h2 id="fTitle" style="margin:0">Log a date</h2><button type="button" class="btn g hide" id="cancelEdit" style="padding:6px 12px">Cancel</button></div>
+ <div class="seg" id="modeSeg" style="margin:12px 0"><button type="button" data-m="pre" class="on">📅 Before the date</button><button type="button" data-m="post">✍️ After the fact</button></div>
+ <p class="muted" id="fHelp">Nickname or initials only. No full names, photos or contact info.</p>
+ <form id="f" autocomplete="off">
+ <div id="preSec">
+ <div class="grid">
   <div><label>Date</label><input type="date" name="date" required></div>
-  <div><label>Nickname / initials</label><input name="nick" maxlength="12" placeholder="e.g. J.R. or 'Climber'" required></div>
-  <div><label>How you met</label><select name="met"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" id="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
+  <div><label>Time (optional)</label><input type="time" name="time"></div>
+  <div><label>Nickname / initials</label><input name="nick" list="nicks" maxlength="12" placeholder="e.g. J.R. or 'Climber'"><datalist id="nicks"></datalist><small class="muted" id="nickHint"></small></div>
+  <div><label>How you met</label><select name="met"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
   <div><label>Where (optional, private)</label><input name="where" maxlength="40" placeholder="e.g. Bar Bandini"></div>
  </div>
- <div style="margin-top:14px"><label>Date type</label><div class="seg" data-n="type"><button type="button">coffee</button><button type="button">drinks</button><button type="button">dinner</button><button type="button">activity</button><button type="button">other</button></div></div>
- <div class="grid" style="margin-top:14px">
-  <div><label>Did you want a 2nd date?</label><div class="seg" data-n="mine"><button type="button">yes</button><button type="button">maybe</button><button type="button">no</button></div></div>
-  <div><label>Did they?</label><div class="seg" data-n="theirs"><button type="button">yes</button><button type="button">unknown</button><button type="button">no</button></div></div>
-  <div><label>2nd date happened?</label><div class="seg" data-n="second"><button type="button" class="on">not yet</button><button type="button">yes</button><button type="button">no</button></div></div>
+ <div class="fld"><label>Date type</label><div class="seg" data-n="type"></div></div>
+ <div class="fld" id="drawBox"><label>What drew you in? <span class="muted">(first date · pick any)</span></label><div class="seg multi" data-n="draw"></div><input data-o="draw" class="hide oth" maxlength="40" placeholder="What else? (private)"></div>
+ <div class="fld"><label>Excitement going in</label><div class="seg" data-n="excite"></div></div>
+ <div class="fld"><label>Hoping for</label><div class="seg multi" data-n="hoping"></div></div>
+ <div class="fld"><label>Concerns going in</label><div class="seg multi" data-n="concerns"></div><input data-o="concerns" class="hide oth" maxlength="40" placeholder="Other concern (private)"></div>
  </div>
- <div class="grid" style="margin-top:14px">
-  <div><label>Rating (optional)</label><div class="seg" data-n="rating"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+ <div id="postSec" class="hide">
+ <h3 style="margin-top:18px">After the date</h3>
+ <div class="fld"><label>How did it go?</label><div class="seg" data-n="went"></div></div>
+ <div class="grid fld">
+  <div><label>Did you want a 2nd date?</label><div class="seg" data-n="mine"></div></div>
+  <div><label>Did they?</label><div class="seg" data-n="theirs"></div></div>
+  <div><label id="secLbl">2nd date happened?</label><div class="seg" data-n="second"></div></div>
+ </div>
+ <div class="fld hide" id="whyBox"><label>Why not? <span class="muted">(pick any)</span></label><div class="seg multi" data-n="why"></div><input data-o="why" class="hide oth" maxlength="40" placeholder="Other reason (private)"></div>
+ <div class="fld hide" id="theyBox"><label>Why do you think? <span class="muted">(pick any)</span></label><div class="seg multi" data-n="they"></div><input data-o="they" class="hide oth" maxlength="40" placeholder="Other reason (private)"></div>
+ <div class="fld hide" id="crBox"><label>Were your concerns right?</label><div id="crRows"></div></div>
+ <div class="grid fld">
+  <div><label>Rating of them (optional)</label><div class="seg" data-n="rating"></div></div>
   <div><label>Private note (optional, stays on this device)</label><input name="note" maxlength="140" placeholder="great convo, loud venue"></div>
  </div>
- <div class="row" style="margin-top:16px"><button class="btn">Save date</button><span class="muted">Stored only in this browser (localStorage).</span></div>
+ </div>
+ <div class="row" style="margin-top:16px"><button class="btn" id="saveBtn">Save upcoming date</button><span class="muted">Stored only in this browser (localStorage).</span></div>
  </form></div>
- <div class="card"><h2>Recent dates</h2><table id="list"></table>
+ <div class="card"><h2>People</h2><div id="upcoming"></div><div id="list"></div>
  <div class="row" style="margin-top:12px"><button class="btn g" id="demo">Try with demo data</button><button class="btn g" id="clearDemo">Clear demo data</button><button class="btn g" id="reset">Reset all data</button><span class="muted" id="demoNote"></span></div></div>
 </section>
 <section id="v-dash" class="hide">
- <div class="card hide" id="empty"><h2>No dates yet</h2><p class="muted">Your stats appear here once you log a date. <a href="#log" style="color:var(--ac)">Log one</a>, or explore first:</p><button class="btn" id="demo2">Try with demo data</button></div><div id="dashBody"><div class="card"><h2>Your dating stats</h2><div class="kpis" id="kpis"></div></div>
- <div class="card"><h3>Second-date funnel</h3><div id="funnel"></div><p class="muted" id="pendNote"></p></div>
- <div class="grid"><div class="card"><h3>2nd-date rate by date type</h3><div id="byType"></div></div>
- <div class="card"><h3>2nd-date rate by how you met</h3><div id="byApp"></div></div></div>
- <div class="grid"><div class="card"><h3>Online vs in person</h3><div id="byOn"></div></div>
- <div class="card"><h3>Trend (dates & 2nd dates / month)</h3><svg id="trend" viewBox="0 0 320 140" width="100%"></svg></div></div></div>
+ <div class="card hide" id="empty"><h2>No dates yet</h2><p class="muted">Your stats appear once you review a date. <a href="#log" style="color:var(--ac)">Log one</a>, or explore first:</p><button class="btn" id="demo2">Try with demo data</button></div>
+ <div id="dashBody">
+ <div class="card"><h2>Your dating stats</h2><div class="kpis" id="kpis"></div></div>
+ <div class="card"><h3>Second-date funnel (per person)</h3><div id="funnel"></div><p class="muted" id="pendNote"></p></div>
+ <div class="grid"><div class="card"><h3>Expectations vs reality</h3><div id="evr"></div></div><div class="card"><h3>Which concerns came true</h3><div id="crStat"></div></div></div>
+ <div class="card"><h3>Hoping for → 2nd date</h3><div id="hopeStat"></div></div>
+ <div class="grid"><div class="card"><h3>2nd-date rate by date type</h3><div id="byType"></div></div><div class="card"><h3>2nd-date rate by how you met</h3><div id="byApp"></div></div></div>
+ <div class="grid"><div class="card"><h3>What draws you in</h3><div id="drawCnt"></div></div><div class="card"><h3>2nd-date rate by what drew you in</h3><div id="drawRate"></div><p id="drawIns" class="ins"></p></div></div>
+ <div class="grid"><div class="card"><h3>Top reasons you pass</h3><div id="rWhy"></div></div><div class="card"><h3>Why you think they pass</h3><div id="rThey"></div></div></div><p id="rIns" class="card ins"></p>
+ <div class="grid"><div class="card"><h3>Online vs in person</h3><div id="byOn"></div></div><div class="card"><h3>Trend (dates & repeat dates / month)</h3><svg id="trend" viewBox="0 0 320 140" width="100%"></svg></div></div>
+ </div>
 </section>
 <section id="v-compare" class="hide">
  <div class="card" id="lockCard"><h2><span class="lk">🔒</span> Compare with LA daters</h2>
- <p>Share your anonymous counts to unlock how you compare with LA daters. Only counts are shared (date type, app, second-date interest, age band, gender, city). Never nicknames, notes or exact dates.</p><p class="muted">Private fields — nickname, notes, where, and “other” detail — are never shared. A date met via “Other” is counted only as “other”.</p>
+ <p>Share your anonymous counts to unlock how you compare with LA daters. Only counts are shared (date type, app, second-date interest, age band, gender, city). Never nicknames, notes or exact dates.</p><p class="muted">Private fields — nickname, notes, where, and any “other” details — are never shared. “Other” answers count only as “other”. Ratings and checkbox categories may be counted.</p>
  <div class="toggle"><input type="checkbox" id="pool"><div><b>Share my anonymous counts (off by default)</b>
  <p class="muted">Peer groups are shown only when they have at least <b>50 contributors</b>. Turn this off anytime to stop sharing and re-lock. <b>In this version nothing is actually sent</b> — there is no server yet. Your personal stats are always free.</p></div></div></div>
  <div class="card" id="cmpCard" style="position:relative"><div id="cmpInner"><h2>Compare with LA daters <span class="badge">EXAMPLE DATA</span></h2>
@@ -79,66 +104,145 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <div id="cmp" style="margin-top:14px"></div></div>
  <div id="lockOv"><div>🔒 <b>Locked</b><br><span class="muted">Turn on sharing above to unlock</span></div></div></div>
 </section>
-<section id="v-card" class="hide">
- <div id="shareCard"></div>
- <p class="muted" style="text-align:center">Only your own aggregate numbers — no nicknames, notes or dates. Screenshot to share.</p>
-</section>
+<section id="v-card" class="hide"><div id="shareCard"></div><p class="muted" style="text-align:center">Only your own aggregate numbers — no nicknames, notes, places or dates. Screenshot to share.</p></section>
 </main>
 <script>
-const K='datelog.v1';let D=JSON.parse(localStorage.getItem(K)||'null');
-const save=()=>localStorage.setItem(K,JSON.stringify(D));
-function demo(){const types=['coffee','drinks','dinner','activity','other'],apps=['Hinge','Hinge','Bumble','Tinder','In person','Raya'];
- const nicks=['DEMO-A','DEMO-B','DEMO-C','DEMO-D','DEMO-E','DEMO-F','DEMO-G','DEMO-H','DEMO-I','DEMO-J','DEMO-K','DEMO-L','DEMO-M','DEMO-N','DEMO-O'];
- const pat=[[0,0,'maybe','unknown','no',3],[1,1,'yes','yes','yes',4],[3,0,'yes','yes','yes',5],[0,2,'no','unknown','no',2],[2,0,'yes','no','no',3],[1,4,'yes','yes','yes',4],[0,3,'maybe','yes','no',3],[3,4,'yes','yes','yes',5],[1,0,'no','yes','no',2],[2,1,'maybe','unknown','no',3],[0,0,'no','no','no',2],[3,5,'yes','yes','yes',4],[1,2,'yes','unknown','no',3],[2,4,'yes','yes','yes',4],[4,0,'maybe','no','not yet',3]];
- const s=new Date('2026-04-05');return pat.map((p,i)=>{const d=new Date(s);d.setDate(d.getDate()+i*13);return{id:i+1,demo:true,date:d.toISOString().slice(0,10),nick:nicks[i],met:apps[p[1]],type:types[p[0]],mine:p[2],theirs:p[3],second:p[4],rating:p[5],note:'(demo)'}})}
-if(!D){D={dates:[],pool:false};save()}
-const $=s=>document.querySelector(s);const pct=(a,b)=>b?Math.round(100*a/b):0;
+const OPT={type:['coffee','drinks','dinner','activity','other'],excite:['1','2','3','4','5'],went:['1','2','3','4','5'],rating:['1','2','3','4','5'],
+ draw:['Looks','Banter/chat','Their profile','Shared interests','Mutual friends','Vibe in person','Not sure','Other'],
+ hoping:['Fun night','Chemistry check','Relationship potential','Just casual','Not sure'],
+ concerns:['Looks different than photos','Nothing to talk about','Red flag from chat','Safety','They\'re not serious','Too nervous','None','Other'],
+ mine:['yes','maybe','no'],theirs:['yes','unknown','no'],second:['not yet','yes','no'],
+ why:['No chemistry','Not physically attracted','Conversation fell flat','Different goals or values','Looked different than photos','Red flag','Too far / bad timing','Into someone else','Other'],
+ they:['No chemistry','Not their type','I was too nervous / off night','Different goals',"They're seeing someone else",'Bad timing','They ghosted / no idea','Other']};
+const OTH={draw:'drawOther',concerns:'concernOther',why:'whyOther',they:'theyOther'};
+const K='datelog.v1';let D=JSON.parse(localStorage.getItem(K)||'null');if(!D)D={dates:[],pool:false};
+const save=()=>localStorage.setItem(K,JSON.stringify(D,(k,v)=>k=='_n'?undefined:v));
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];const pct=(a,b)=>b?Math.round(100*a/b):0;
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const BAD=/\d{3}.?\d{3}.?\d{4}|@|https?:|www\./i;
 function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1600)}
-document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{if(e.target.tagName!='BUTTON')return;const on=e.target.classList.contains('on');g.querySelectorAll('button').forEach(b=>b.classList.remove('on'));if(!(on&&g.dataset.n=='rating'))e.target.classList.add('on')}));
-function seg(n){const b=document.querySelector(`.seg[data-n=${n}] .on`);return b?b.textContent:null}
-const f=$('#f');f.date.value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
-f.onsubmit=e=>{e.preventDefault();if(!f.nick.value.trim()){toast('Add a nickname or initials');return}
- const r={id:Date.now(),date:f.date.value,nick:f.nick.value.trim().slice(0,12),met:f.met.value,type:seg('type'),mine:seg('mine'),theirs:seg('theirs'),second:seg('second'),rating:+seg('rating')||null,note:f.note.value.trim(),where:f.where.value.trim(),otherDetail:f.met.value=='Other'?f.otherDetail.value.trim():''};
- if(!r.type||!r.mine||!r.theirs||!r.second){toast('Pick type, interest & outcome');return}
- if(/\d{3}.?\d{3}.?\d{4}|@|https?:/i.test([r.nick,r.note,r.where,r.otherDetail].join(' '))){toast('No contact info please');return}
- D.dates.push(r);save();f.reset();f.date.value=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);document.querySelectorAll('.seg .on').forEach(b=>b.classList.remove('on'));document.querySelector('.seg[data-n=second] button').classList.add('on');$('#otherDetail').classList.add('hide');toast('Saved ✓');render()};
-$('#demo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo).concat(demo());save();render()};
-$('#clearDemo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo);save();render();toast('Demo data cleared')};
-$('#demo2').onclick=()=>$('#demo').click();
-$('#reset').onclick=()=>{if(confirm('Delete ALL dates (demo and real) from this browser?')){D.dates=[];save();render()}};
-$('#pool').onchange=e=>{D.pool=e.target.checked;save();render();toast(D.pool?'Unlocked (nothing is sent in this version)':'Sharing off — compare locked')};
-function bars(el,rows,bench){$(el).innerHTML=rows.length?rows.map(([l,a,b])=>{const p=pct(a,b),m=bench&&bench[l];return`<div class="bar"><span class="l">${l}</span><span class="t"><span class="f" style="width:${p}%;display:block"></span>${m!=null?`<span class="m" style="left:${m}%"></span>`:''}</span><span class="v">${p}%<small class="muted"> ${a}/${b}</small></span></div>`}).join(''):'<p class="muted">No data yet.</p>'}
-function group(fn){const g={};D.dates.filter(d=>d.second!='not yet').forEach(d=>{const k=fn(d);g[k]=g[k]||[0,0];g[k][1]++;if(d.second=='yes')g[k][0]++});return Object.entries(g).map(([k,[a,b]])=>[k,a,b]).sort((x,y)=>y[2]-x[2])}
-function stats(){const ds=D.dates,n=ds.length,sec=ds.filter(d=>d.second=='yes').length,pend=ds.filter(d=>d.second=='not yet').length,dec=n-pend,want=ds.filter(d=>d.mine=='yes').length,mut=ds.filter(d=>d.mine=='yes'&&d.theirs=='yes').length,rt=ds.filter(d=>d.rating);
- const bt=group(d=>d.type).filter(r=>r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2]);return{n,sec,pend,dec,want,mut,avg:rt.length?(rt.reduce((s,d)=>s+d.rating,0)/rt.length).toFixed(1):'–',best:bt[0]?bt[0][0]:'–',people:new Set(ds.map(d=>d.nick)).size}}
-function render(){const s=stats(),ds=D.dates;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
- $('#list').innerHTML='<tr><th>Date</th><th>Who</th><th>Met</th><th>Type</th><th>2nd?</th><th></th></tr>'+(ds.length?'':'<tr><td colspan=6 class="muted">No dates yet — log your first one above, or tap “Try with demo data”.</td></tr>')+ds.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(d=>`<tr><td>${d.date}</td><td>${esc(d.nick)}</td><td>${esc(d.met)}${d.otherDetail?' <small class="muted">('+esc(d.otherDetail)+')</small>':''}${d.where?'<br><small class="muted">📍 '+esc(d.where)+'</small>':''}</td><td>${d.type}</td><td><select class="oc" data-id="${d.id}" style="padding:4px;width:auto">${['not yet','yes','no'].map(v=>`<option${v==d.second?' selected':''}>${v}</option>`).join('')}</select></td><td><button class="btn g del" data-id="${d.id}" style="padding:4px 9px" title="Delete">✕</button></td></tr>`).join('');
- $('#demoNote').textContent=ds.some(d=>d.demo)?'Showing fake DEMO-* dates — “Clear demo data” removes only those.':'';
- $('#kpis').innerHTML=[[s.n,'first dates logged'],[pct(s.sec,s.dec)+'%','2nd-date rate'],[pct(s.mut,s.n)+'%','mutual interest'],[s.avg,'avg rating'],[s.best,'best date type']].map(([v,l])=>`<div class="kpi"><b>${v}</b><small>${l}</small></div>`).join('');
- bars('#funnel',[['Dates',s.n,s.n],['I wanted 2nd',s.want,s.n],['Mutual yes',s.mut,s.n],['2nd happened (of decided)',s.sec,s.dec]]);$('#pendNote').textContent=s.pend?s.pend+' date'+(s.pend>1?'s':'')+' pending (“not yet”) — not counted in 2nd-date rates.':'';
- const old=ds.filter(d=>d.second=='not yet'&&(Date.now()-new Date(d.date))/864e5>14).sort((a,b)=>a.date.localeCompare(b.date))[0];$('#nudge').classList.toggle('hide',!old);if(old)$('#nudge').innerHTML=`<b>Did you see ${esc(old.nick)} again?</b> <span class="muted">(${old.date})</span> <button class="btn g oc2" data-id="${old.id}" data-v="yes">Yes</button> <button class="btn g oc2" data-id="${old.id}" data-v="no">No</button>`;
+$$('.seg[data-n]').forEach(g=>g.innerHTML=OPT[g.dataset.n].map(o=>`<button type="button">${esc(o)}</button>`).join(''));
+const segRoot=n=>$(`#f .seg[data-n=${n}]`);
+function getSeg(n){const g=segRoot(n),on=$$('.on',g).map(b=>b.textContent);return g.classList.contains('multi')?on:(on[0]??null)}
+function setSeg(n,v){const g=segRoot(n),vs=[].concat(v??[]).map(String);$$('button',g).forEach(b=>b.classList.toggle('on',vs.includes(b.textContent)));othVis(n)}
+function othVis(n){const i=$(`#f .oth[data-o=${n}]`);if(i)i.classList.toggle('hide',!getSeg(n).includes('Other'))}
+$('#f').addEventListener('click',e=>{const b=e.target.closest('.seg[data-n] button');if(!b)return;const g=b.parentNode,n=g.dataset.n;
+ if(g.classList.contains('multi')){b.classList.toggle('on');if(n=='concerns'&&b.textContent=='None'&&b.classList.contains('on'))$$('button',g).forEach(x=>x!==b&&x.classList.remove('on'));else if(n=='concerns')$$('button',g).find(x=>x.textContent=='None').classList.remove('on')}
+ else{const on=b.classList.contains('on');$$('button',g).forEach(x=>x.classList.remove('on'));if(!(on&&['rating','excite','went'].includes(n)))b.classList.add('on')}
+ othVis(n);upd()});
+const showWhy=m=>m=='no',showThey=(m,t,s)=>(m=='yes'||m=='maybe')&&(t=='no'||(t=='unknown'&&s=='no'));
+let mode='pre',editId=null;const f=$('#f');
+function upd(){$('#postSec').classList.toggle('hide',mode=='pre');$$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.m==(mode=='review'?'post':mode)));$('#modeSeg').classList.toggle('hide',mode=='review');
+ $('#whyBox').classList.toggle('hide',!showWhy(getSeg('mine')));$('#theyBox').classList.toggle('hide',!showThey(getSeg('mine'),getSeg('theirs'),getSeg('second')));
+ const cs=getSeg('concerns').filter(c=>c!='None');$('#crBox').classList.toggle('hide',!cs.length);const prev={};$$('#crRows .cr').forEach(r=>{const on=$('.on',r);if(on)prev[r.dataset.c]=on.textContent});
+ $('#crRows').innerHTML=cs.map(c=>`<div class="cr dr" data-c="${esc(c)}"><span>${esc(c)}</span><span class="seg" style="flex:0 0 140px">${['yes','no'].map(v=>`<button type="button"${(prev[c]||crInit[c])==v?' class="on"':''}>${v}</button>`).join('')}</span></div>`).join('');
+ const p=findP(f.nick.value),isFirst=!p||(editId&&p.all[0].id==editId);$('#drawBox').classList.toggle('hide',!isFirst);
+ $('#saveBtn').textContent=mode=='pre'?(editId?'Save changes':'Save upcoming date'):mode=='review'?'Save review':'Save date';
+ $('#fTitle').textContent=mode=='review'?'Review: '+(f.nick.value||'date'):editId?'Edit upcoming date':'Log a date';$('#cancelEdit').classList.toggle('hide',!editId)}
+let crInit={};$('#crRows').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const r=b.closest('.cr');$$('button',r).forEach(x=>x.classList.toggle('on',x===b))});
+$('#modeSeg').onclick=e=>{const b=e.target.closest('button');if(b){mode=b.dataset.m;upd()}};
+const key=d=>String(d.nick||'').trim().toLowerCase();
+function findP(n){return people(true).find(p=>key(p)==key({nick:n}))}
+function people(all){const m={};D.dates.forEach(d=>(m[key(d)]=m[key(d)]||[]).push(d));return Object.values(m).map(as=>{as.sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))||a.id-b.id);as.forEach((d,i)=>d._n=i+1);
+ const ds=as.filter(d=>d.status!='upcoming');const first=ds[0]||as[0],last=ds[ds.length-1];
+ return{nick:as[0].nick,met:as[0].met,od:as[0].otherDetail,all:as,ds,first,last,up:as.filter(d=>d.status=='upcoming'),
+  reached2:as.length>=2||(first&&first.second=='yes'),resolved:as.length>=2||(ds.length>0&&first.second!='not yet'),reached3:as.length>=3||(as.length==2&&ds.length==2&&last.second=='yes'),
+  status:as.at(-1).status=='upcoming'?'upcoming':!last?'':last.second=='not yet'?'pending':last.second=='yes'?'seeing again':'ended'}}).filter(p=>all||p.ds.length).sort((a,b)=>b.all.at(-1).date.localeCompare(a.all.at(-1).date))}
+function normalize(){people(true).forEach(p=>p.all.slice(0,-1).forEach(d=>{if(d.status!='upcoming')d.second='yes'}));
+ D.dates.forEach(d=>{d.status=d.status||'done';for(const k of ['where','otherDetail','drawOther','whyOther','theyOther','concernOther','note','time'])d[k]=d[k]||'';for(const k of ['draw','why','they','hoping','concerns'])d[k]=d[k]||[];d.concernsRight=d.concernsRight||{};if(d.status=='done'&&!d.second)d.second='not yet'})}
+const due=d=>d.status=='upcoming'&&new Date(d.date+'T'+(d.time||'23:59'))<new Date();
+function resetForm(){editId=null;crInit={};f.reset();f.date.value=today();$$('#f .seg button').forEach(b=>b.classList.remove('on'));setSeg('second','not yet');$$('#f .oth').forEach(i=>i.classList.add('hide'));f.otherDetail.classList.add('hide');$('#nickHint').textContent='';$('#secLbl').textContent='2nd date happened?';if(mode=='review')mode='pre';upd()}
+function openForm(id,m){const d=D.dates.find(x=>String(x.id)==String(id));if(!d)return;resetForm();editId=d.id;mode=m;crInit=d.concernsRight||{};
+ for(const k of ['date','time','nick','met','where','note','otherDetail'])f[k].value=d[k]||'';f.otherDetail.classList.toggle('hide',d.met!='Other');
+ for(const k of Object.keys(OPT))setSeg(k,k=='second'?(d.second||'not yet'):d[k]);for(const [k,o] of Object.entries(OTH)){const i=$(`#f .oth[data-o=${k}]`);if(i)i.value=d[o]||''}
+ const p=findP(d.nick);if(p&&p.all[0].id!=d.id)$('#secLbl').textContent='Saw them again after this?';location.hash='#log';upd();$('#formCard').scrollIntoView({block:'start'})}
+$('#cancelEdit').onclick=()=>{mode='pre';resetForm()};
+f.nick.oninput=()=>{if(editId)return upd();const p=findP(f.nick.value);$('#nickHint').textContent=p?'↪ Date #'+(p.all.length+1)+' with '+p.nick+' · how you met carried over':'';$('#secLbl').textContent=p?'Saw them again after this?':'2nd date happened?';if(p){f.met.value=p.met;f.otherDetail.value=p.od||'';f.met.onchange()}upd()};
+f.met.onchange=()=>f.otherDetail.classList.toggle('hide',f.met.value!='Other');
+f.onsubmit=e=>{e.preventDefault();const nick=f.nick.value.trim().slice(0,12);if(!nick){toast('Add a nickname or initials');return}if(!f.date.value){toast('Pick a date');return}
+ const r={date:f.date.value,time:f.time.value,nick,met:f.met.value,otherDetail:f.met.value=='Other'?f.otherDetail.value.trim():'',where:f.where.value.trim(),type:getSeg('type'),excite:+getSeg('excite')||null,hoping:getSeg('hoping'),concerns:getSeg('concerns'),draw:[],drawOther:'',why:[],whyOther:'',they:[],theyOther:'',concernOther:'',concernsRight:{}};
+ if(!r.type){toast('Pick a date type');return}
+ const ov=k=>{const i=$(`#f .oth[data-o=${k}]`);return getSeg(k).includes('Other')?i.value.trim():''};
+ if(!$('#drawBox').classList.contains('hide')){r.draw=getSeg('draw');r.drawOther=ov('draw')}r.concernOther=ov('concerns');
+ const post=mode!='pre';if(post){Object.assign(r,{status:'done',went:+getSeg('went')||null,mine:getSeg('mine'),theirs:getSeg('theirs'),second:getSeg('second'),rating:+getSeg('rating')||null,note:f.note.value.trim()});
+  if(!r.mine||!r.theirs||!r.second){toast('Pick interest & outcome');return}
+  if(showWhy(r.mine)){r.why=getSeg('why');r.whyOther=ov('why')}if(showThey(r.mine,r.theirs,r.second)){r.they=getSeg('they');r.theyOther=ov('they')}
+  $$('#crRows .cr').forEach(x=>{const on=$('.on',x);if(on)r.concernsRight[x.dataset.c]=on.textContent})}
+ else Object.assign(r,{status:'upcoming',went:null,mine:null,theirs:null,second:null,rating:null,note:''});
+ if(BAD.test([r.nick,r.note,r.where,r.otherDetail,r.drawOther,r.whyOther,r.theyOther,r.concernOther].join(' '))){toast('No contact info please');return}
+ if(editId){const d=D.dates.find(x=>x.id==editId);Object.assign(d,r)}else{const p=findP(nick);if(p&&p.last)p.last.second='yes';D.dates.push({id:Date.now(),...r})}
+ const was=mode;normalize();save();mode='pre';resetForm();toast(was=='pre'?'Upcoming date saved ✓':'Saved ✓');render()};
+function demo(){const T=OPT.type,A=['Hinge','Hinge','Bumble','Tinder','In person','Raya','Set up','At work'];
+ const pat=[[0,0,'maybe','unknown','no',3,3,2],[1,1,'yes','yes','yes',4,4,4],[3,0,'yes','yes','yes',5,4,5],[0,2,'no','unknown','no',2,3,2],[2,0,'yes','no','no',3,4,3],[1,4,'yes','yes','yes',4,3,4],[0,3,'maybe','yes','no',3,2,3],[3,6,'yes','yes','yes',5,4,5],[1,0,'no','yes','no',2,4,2],[2,1,'maybe','unknown','no',3,3,3],[0,0,'no','no','no',2,2,1],[3,5,'yes','yes','yes',4,5,4],[1,2,'yes','unknown','no',3,3,3],[2,7,'yes','yes','yes',4,3,4],[4,0,'maybe','no','not yet',3,4,3]];
+ const dr=[['Looks'],['Banter/chat'],['Shared interests','Banter/chat'],['Looks'],['Their profile'],['Vibe in person'],['Looks','Their profile'],['Mutual friends','Vibe in person'],['Looks'],['Their profile'],['Looks'],['Banter/chat'],['Not sure'],['Banter/chat'],['Looks']];
+ const hp=[['Fun night'],['Chemistry check'],['Relationship potential'],['Just casual'],['Chemistry check'],['Relationship potential'],['Fun night'],['Relationship potential'],['Just casual'],['Not sure'],['Fun night'],['Relationship potential','Chemistry check'],['Chemistry check'],['Relationship potential'],['Fun night']];
+ const cc=[['Nothing to talk about'],['None'],['Too nervous'],['Looks different than photos'],["They're not serious"],['None'],['Red flag from chat'],['None'],['Looks different than photos'],['Too nervous'],['Red flag from chat','Nothing to talk about'],['None'],['Nothing to talk about'],['Too nervous'],["They're not serious"]];
+ const cr=[{'Nothing to talk about':'yes'},{},{'Too nervous':'no'},{'Looks different than photos':'yes'},{"They're not serious":'yes'},{},{'Red flag from chat':'no'},{},{'Looks different than photos':'yes'},{'Too nervous':'no'},{'Red flag from chat':'yes','Nothing to talk about':'yes'},{},{'Nothing to talk about':'no'},{'Too nervous':'no'},{"They're not serious":'yes'}];
+ const why={3:['No chemistry'],8:['Not physically attracted','Looked different than photos'],10:['No chemistry','Red flag']},they={0:['They ghosted / no idea'],4:['Not their type'],9:['Bad timing'],12:['They ghosted / no idea'],14:['Different goals']};
+ const s=new Date('2026-04-05'),out=pat.map((p,i)=>{const d=new Date(s);d.setDate(d.getDate()+i*12);return{id:i+1,demo:true,status:'done',date:d.toISOString().slice(0,10),time:'19:30',nick:'DEMO-'+'ABCDEFGHIJKLMNO'[i],met:A[p[1]],otherDetail:'',where:i%3?'':'(demo venue)',type:T[p[0]],mine:p[2],theirs:p[3],second:p[4],rating:p[5],excite:p[6],went:p[7],draw:dr[i],drawOther:'',hoping:hp[i],concerns:cc[i],concernOther:'',concernsRight:cr[i],why:why[i]||[],whyOther:'',they:they[i]||[],theyOther:'',note:'(demo)'}});
+ [[1,'yes'],[2,'no'],[5,'yes'],[7,'not yet'],[11,'no']].forEach(([i,sec],j)=>{const b=out[i],d=new Date(b.date);d.setDate(d.getDate()+7);const r={...b,id:100+j,date:d.toISOString().slice(0,10),type:T[(j+2)%4],second:sec,draw:[],excite:4,went:sec=='no'?2:4,concerns:['None'],concernsRight:{},hoping:['Relationship potential'],why:[],they:sec=='no'?['Different goals']:[],mine:sec=='no'?'maybe':'yes',theirs:sec=='no'?'no':'yes'};out.push(r);
+  if(sec=='yes'){const d3=new Date(d);d3.setDate(d3.getDate()+7);out.push({...r,id:200+j,date:d3.toISOString().slice(0,10),type:'dinner',second:'not yet',they:[]})}});
+ const up=(id,nick,dd,time,met,type,ex,hope,con)=>({id,demo:true,status:'upcoming',date:dd,time,nick,met,otherDetail:'',where:'(demo venue)',type,excite:ex,hoping:hope,concerns:con,concernOther:'',concernsRight:{},draw:['Banter/chat'],drawOther:'',went:null,mine:null,theirs:null,second:null,rating:null,why:[],whyOther:'',they:[],theyOther:'',note:''});
+ const t=new Date(),fmt=x=>new Date(x-x.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+ out.push(up(300,'DEMO-P',fmt(new Date(t-2*864e5)),'19:00','Hinge','drinks',4,['Chemistry check'],['Nothing to talk about']),up(301,'DEMO-Q',fmt(new Date(+t+4*864e5)),'18:30','Bumble','activity',5,['Relationship potential'],['Looks different than photos','Too nervous']));return out}
+function bars(el,rows,bench,fmt){$(el).innerHTML=rows.length?rows.map(([l,a,b])=>{const p=pct(a,b),m=bench&&bench[l];return`<div class="bar"><span class="l">${esc(l)}</span><span class="t"><span class="f" style="width:${p}%;display:block"></span>${m!=null?`<span class="m" style="left:${m}%"></span>`:''}</span><span class="v">${p}%<small class="muted"> ${a}/${b}</small></span></div>`}).join(''):'<p class="muted">No data yet.</p>'}
+function cbars(el,a,empty){const mx=Math.max(1,...a.map(x=>x[1]));$(el).innerHTML=a.length?a.map(([k,v,x])=>`<div class="bar"><span class="l" style="width:150px">${esc(k)}</span><span class="t"><span class="f" style="width:${100*v/mx}%;display:block"></span></span><span class="v">${x??v}</span></div>`).join(''):`<p class="muted">${empty}</p>`}
+function group(fn){const g={};people().filter(p=>p.resolved).forEach(p=>{const k=fn(p.first);g[k]=g[k]||[0,0];g[k][1]++;if(p.reached2)g[k][0]++});return Object.entries(g).map(([k,[a,b]])=>[k,a,b]).sort((x,y)=>y[2]-x[2])}
+const INP=['In person','At work','Set up'];const chan=d=>INP.includes(d.met)?'In person':d.met=='Other'?'Other':'Online';
+const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length):null,f1=x=>x==null?'–':x.toFixed(1);
+function stats(){const P=people(),n=P.length,done=D.dates.filter(d=>d.status!='upcoming'),res=P.filter(p=>p.resolved).length,sec=P.filter(p=>p.reached2).length,r3=P.filter(p=>p.reached3).length,want=P.filter(p=>p.first.mine=='yes').length,mut=P.filter(p=>p.first.mine=='yes'&&p.first.theirs=='yes').length,rt=done.filter(d=>d.rating);
+ const bt=group(d=>d.type).filter(r=>r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2]);return{P,n,done,total:done.length,sec,dec:res,pend:n-res,r3,want,mut,avg:rt.length?f1(avg(rt.map(d=>d.rating))):'–',best:bt[0]?bt[0][0]:'–'}}
+function render(){normalize();const s=stats(),all=D.dates,ds=s.done;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
+ const PA=people(true);$('#nicks').innerHTML=PA.map(p=>`<option value="${esc(p.nick)}">`).join('');
+ // nudges
+ const dueL=all.filter(due).sort((a,b)=>a.date.localeCompare(b.date)),old=s.P.filter(p=>p.last.second=='not yet'&&!p.up.length&&(Date.now()-new Date(p.last.date))/864e5>14).sort((a,b)=>a.last.date.localeCompare(b.last.date))[0];
+ $('#nudges').innerHTML=dueL.map(d=>`<div class="card nud"><b>How did it go with ${esc(d.nick)}?</b> <span class="muted">(${d.date}${d.time?' '+d.time:''})</span> <button class="btn rev" data-id="${d.id}" style="padding:7px 12px">Review date</button></div>`).join('')+(old?`<div class="card nud"><b>Did you see ${esc(old.nick)} again?</b> <span class="muted">(date #${old.last._n}, ${old.last.date})</span> <button class="btn g oc2" data-id="${old.last.id}" data-v="yes">Yes</button> <button class="btn g oc2" data-id="${old.last.id}" data-v="no">No</button></div>`:'');
+ const ups=all.filter(d=>d.status=='upcoming').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ $('#upcoming').innerHTML=ups.length?'<h3>Upcoming</h3>'+ups.map(d=>`<div class="pc up"><div class="row" style="justify-content:space-between"><div><b>${esc(d.nick)}</b> <span class="st upcoming">${due(d)?'ready to review':'upcoming'}</span><br><span class="muted">#${d._n} · ${d.date}${d.time?' '+d.time:''} · ${d.type} · ${esc(d.met)}${d.where?' · 📍 '+esc(d.where):''}${d.excite?' · excitement '+d.excite+'/5':''}</span>${d.concerns.length&&d.concerns[0]!='None'?`<br><small class="muted">Concerns: ${d.concerns.map(esc).join(', ')}</small>`:''}</div><div class="row"><button class="btn rev" data-id="${d.id}" style="padding:7px 12px">Review</button><button class="btn g edt" data-id="${d.id}" style="padding:7px 10px">Edit</button><button class="btn g del" data-id="${d.id}" style="padding:7px 10px">✕</button></div></div></div>`).join('')+'<h3 style="margin-top:12px">People</h3>':'';
+ $('#list').innerHTML=s.P.length?s.P.map(p=>`<div class="pc"><div class="row" style="justify-content:space-between"><div><b>${esc(p.nick)}</b> <span class="muted">· ${esc(p.met)}${p.od?' ('+esc(p.od)+')':''} · ${p.ds.length} date${p.ds.length>1?'s':''} · latest ${p.last.date}</span><br><span class="st ${p.status.replace(' ','-')}">${p.status}</span></div><label class="muted" style="margin:0">See again? <select class="oc" data-id="${p.last.id}" style="padding:4px;width:auto">${OPT.second.map(v=>`<option${v==p.last.second?' selected':''}>${v}</option>`).join('')}</select></label></div>
+ <details><summary class="muted">Show ${p.ds.length} date${p.ds.length>1?'s':''}</summary>${p.ds.map(d=>`<div class="dr"><span>#${d._n} · ${d.date} · ${d.type}${d.where?' · 📍 '+esc(d.where):''}${d.went?' · went '+d.went+'/5':''}${d.rating?' · ⭐'+d.rating:''}${d.note?' · <i>'+esc(d.note)+'</i>':''}${d.why.length?'<br>🙅 '+d.why.map(esc).join(', '):''}${d.they.length?'<br>🤷 '+d.they.map(esc).join(', '):''}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn g rev" data-id="${d.id}" style="padding:3px 8px">Edit</button><button class="btn g del" data-id="${d.id}" style="padding:3px 8px" title="Delete">✕</button></span></div>`).join('')}</details></div>`).join(''):(ups.length?'<p class="muted">No reviewed dates yet.</p>':'<p class="muted">No dates yet — log your first one above, or tap “Try with demo data”.</p>');
+ $('#demoNote').textContent=all.some(d=>d.demo)?'Showing fake DEMO-* dates — “Clear demo data” removes only those.':'';$('#clearDemo').classList.toggle('hide',!all.some(d=>d.demo));
+ $('#kpis').innerHTML=[[s.n,'people dated'],[s.total,'dates logged'],[pct(s.sec,s.dec)+'%','2nd-date rate (per person)'],[pct(s.mut,s.n)+'%','mutual interest'],[s.avg,'avg rating'],[s.best,'best first-date type']].map(([v,l])=>`<div class="kpi"><b>${esc(v)}</b><small>${l}</small></div>`).join('');
+ bars('#funnel',[['1st dates',s.n,s.n],['I wanted 2nd',s.want,s.n],['Mutual yes',s.mut,s.n],['2nd date',s.sec,s.dec],['3rd+ date',s.r3,s.sec]]);
+ $('#pendNote').textContent=(s.pend?s.pend+' '+(s.pend>1?'people':'person')+' pending after the first date (“not yet”) — excluded from 2nd-date rate. ':'')+(ups.length?ups.length+' upcoming not counted. ':'')+'2nd-date rate = people with a 2nd date ÷ people with a resolved first-date outcome.';
+ // expectations vs reality
+ const ev=ds.filter(d=>d.excite&&d.went),byT={};ev.forEach(d=>{(byT[d.type]=byT[d.type]||[]).push(d)});
+ $('#evr').innerHTML=ev.length?`<div class="kpis"><div class="kpi"><b>${f1(avg(ev.map(d=>d.excite)))}</b><small>avg excitement</small></div><div class="kpi"><b>${f1(avg(ev.map(d=>d.went)))}</b><small>avg how it went</small></div></div><table style="margin-top:8px"><tr><th>Type</th><th>Excited</th><th>Went</th><th>Δ</th><th>n</th></tr>${Object.entries(byT).map(([k,a])=>{const x=avg(a.map(d=>d.excite)),y=avg(a.map(d=>d.went));return`<tr><td>${k}</td><td>${f1(x)}</td><td>${f1(y)}</td><td style="color:${y>=x?'var(--ok)':'var(--ac)'}">${(y-x>=0?'+':'')+(y-x).toFixed(1)}</td><td>${a.length}</td></tr>`}).join('')}</table>`:'<p class="muted">Log excitement before and “how it went” after to see this.</p>';
+ const CR={};ds.forEach(d=>Object.entries(d.concernsRight||{}).forEach(([c,v])=>{CR[c]=CR[c]||[0,0];CR[c][1]++;if(v=='yes')CR[c][0]++}));
+ bars('#crStat',Object.entries(CR).map(([k,[a,b]])=>[k,a,b]).sort((x,y)=>y[1]/y[2]-x[1]/x[2]||y[2]-x[2]));if(!Object.keys(CR).length)$('#crStat').innerHTML='<p class="muted">Answer “Were your concerns right?” after a date to see this.</p>';
+ const HP={};ds.filter(d=>d.second&&d.second!='not yet').forEach(d=>d.hoping.forEach(h=>{HP[h]=HP[h]||[0,0];HP[h][1]++;if(d.second=='yes')HP[h][0]++}));
+ bars('#hopeStat',Object.entries(HP).map(([k,[a,b]])=>[k,a,b]).sort((x,y)=>y[2]-x[2]));if(!Object.keys(HP).length)$('#hopeStat').innerHTML='<p class="muted">Pick “Hoping for” before a date to see how each goal turns out.</p>';
+ const DR={};s.P.forEach(p=>(p.first.draw||[]).forEach(o=>{DR[o]=DR[o]||[0,0,0];DR[o][0]++;if(p.resolved){DR[o][2]++;if(p.reached2)DR[o][1]++}}));
+ cbars('#drawCnt',Object.entries(DR).sort((a,b)=>b[1][0]-a[1][0]).map(([k,v])=>[k,v[0],v[0]+' of '+s.n]),'Tag “What drew you in?” on first dates to see this.');
+ const dr=Object.entries(DR).filter(([k,v])=>v[2]>=2).map(([k,v])=>[k,v[1],v[2]]).sort((a,b)=>b[1]/b[2]-a[1]/a[2]);bars('#drawRate',dr);if(!dr.length)$('#drawRate').innerHTML='<p class="muted">Needs at least 2 resolved people per trigger.</p>';
+ $('#drawIns').textContent=dr.length>=2&&pct(dr[0][1],dr[0][2])>pct(dr.at(-1)[1],dr.at(-1)[2])?`💡 ${dr[0][0]} leads to 2nd dates ${pct(dr[0][1],dr[0][2])}% of the time vs ${dr.at(-1)[0]} ${pct(dr.at(-1)[1],dr.at(-1)[2])}%.`:'';
+ const cnt=k=>{const c={};ds.forEach(d=>d[k].forEach(o=>c[o]=(c[o]||0)+1));return Object.entries(c).sort((a,b)=>b[1]-a[1])},cw=cnt('why'),ct=cnt('they');
+ cbars('#rWhy',cw,'No reasons logged yet.');cbars('#rThey',ct,'No reasons logged yet.');
+ $('#rIns').textContent=cw.length||ct.length?'💡 '+(cw.length?`You most often pass for “${cw[0][0]}” (${cw[0][1]}×)`:'')+(cw.length&&ct.length?'; ':'')+(ct.length?`you think they pass mostly for “${ct[0][0]}” (${ct[0][1]}×)`:'')+'.':'';$('#rIns').classList.toggle('hide',!(cw.length||ct.length));
  bars('#byType',group(d=>d.type));bars('#byApp',group(d=>d.met));bars('#byOn',group(chan));
- const mo={};ds.forEach(d=>{const m=d.date.slice(0,7);mo[m]=mo[m]||[0,0];mo[m][0]++;if(d.second=='yes')mo[m][1]++});const ks=Object.keys(mo).sort(),mx=Math.max(1,...ks.map(k=>mo[k][0])),w=300/Math.max(1,ks.length);
- $('#trend').innerHTML=ks.map((k,i)=>`<rect x="${10+i*w+w*.15}" y="${115-95*mo[k][0]/mx}" width="${w*.35}" height="${95*mo[k][0]/mx}" rx="3" fill="#ff5a5f"/><rect x="${10+i*w+w*.5}" y="${115-95*mo[k][1]/mx}" width="${w*.35}" height="${95*mo[k][1]/mx}" rx="3" fill="#ffb347"/><text x="${10+i*w+w/2}" y="132" fill="#8b93a3" font-size="9" text-anchor="middle">${k.slice(5)}/${k.slice(2,4)}</text>`).join('')+'<text x="10" y="10" fill="#8b93a3" font-size="9">■ dates  </text><text x="60" y="10" fill="#ffb347" font-size="9">■ 2nd dates</text>';
- const AG={'25–29':3,'30–34':0,'35–39':-3,'40+':-6},GN={Woman:-2,Man:2,Nonbinary:0},o=(AG[$('#age').value]||0)+(GN[$('#gen').value]||0),EX={};Object.entries({coffee:22,drinks:31,dinner:38,activity:45,other:28,Online:30,'In person':41}).forEach(([k,v])=>EX[k]=v+o);
- $('#cmp').innerHTML='<h3>Your 2nd-date rate vs example peers</h3><div id="c1"></div><h3 style="margin-top:14px">Online vs in person</h3><div id="c2"></div><p class="muted">Example benchmarks for '+$('#age').value+' · '+$('#gen').value+' · LA are illustrative only, not survey or user data.'+(ds.length?'':' Log dates to see your bars.')+'</p>';
- bars('#c1',group(d=>d.type),EX);bars('#c2',group(chan),EX);$('#pool').checked=!!D.pool;document.body.classList.toggle('locked',!D.pool);$('#clearDemo').classList.toggle('hide',!ds.some(d=>d.demo));
+ const mo={};ds.forEach(d=>{const m=d.date.slice(0,7);mo[m]=mo[m]||[0,0];mo[m][0]++;if(d._n>1)mo[m][1]++});const ks=Object.keys(mo).sort(),mx=Math.max(1,...ks.map(k=>mo[k][0])),w=300/Math.max(1,ks.length);
+ $('#trend').innerHTML=ks.map((k,i)=>`<rect x="${10+i*w+w*.15}" y="${115-95*mo[k][0]/mx}" width="${w*.35}" height="${95*mo[k][0]/mx}" rx="3" fill="#ff5a5f"/><rect x="${10+i*w+w*.5}" y="${115-95*mo[k][1]/mx}" width="${w*.35}" height="${95*mo[k][1]/mx}" rx="3" fill="#ffb347"/><text x="${10+i*w+w/2}" y="132" fill="#8b93a3" font-size="9" text-anchor="middle">${k.slice(5)}/${k.slice(2,4)}</text>`).join('')+'<text x="10" y="10" fill="#8b93a3" font-size="9">■ dates</text><text x="60" y="10" fill="#ffb347" font-size="9">■ repeat dates</text>';
+ const AG={'25–29':3,'30–34':0,'35–39':-3,'40+':-6},GN={Woman:-2,Man:2,Nonbinary:0},o=(AG[$('#age').value]||0)+(GN[$('#gen').value]||0),EX={};Object.entries({coffee:22,drinks:31,dinner:38,activity:45,other:28,Online:30,'In person':41,Other:30}).forEach(([k,v])=>EX[k]=v+o);
+ $('#cmp').innerHTML='<h3>Your 2nd-date rate vs example peers</h3><div id="c1"></div><h3 style="margin-top:14px">Online vs in person</h3><div id="c2"></div><p class="muted">Example benchmarks for '+esc($('#age').value)+' · '+esc($('#gen').value)+' · LA are illustrative only, not survey or user data.'+(ds.length?'':' Log dates to see your bars.')+'</p>';
+ bars('#c1',group(d=>d.type),EX);bars('#c2',group(chan),EX);$('#pool').checked=!!D.pool;document.body.classList.toggle('locked',!D.pool);
  const ba=group(d=>d.met).filter(r=>chan({met:r[0]})=='Online'&&r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2])[0];
- $('#shareCard').innerHTML=`<div style="font-weight:800;letter-spacing:.1em;font-size:13px">DATELOG · MY 2026</div><div style="margin-top:26px" class="big">${s.n}</div><div class="s">first dates</div><div style="margin-top:18px" class="big">${pct(s.sec,s.dec)}%</div><div class="s">turned into a 2nd date</div>
- <div class="tile">🏆 Best date type: <b>${s.best}</b></div><div class="tile">📱 Best app: <b>${ba?ba[0]+' ('+pct(ba[1],ba[2])+'%)':'–'}</b></div><div class="tile">🤝 Mutual interest: <b>${pct(s.mut,s.n)}%</b> · ⭐ avg <b>${s.avg}</b></div>
- <div style="margin-top:auto" class="s">${ds.length?'':'no dates logged yet · '}${ds.some(d=>d.demo)?'demo data · ':''}datelog — track your dating like a runner tracks miles</div>`}
-const INP=['In person','At work','Set up'];function chan(d){return INP.includes(d.met)?'In person':d.met=='Other'?'Other':'Online'}
-// Pooled representation: counts-only fields; never nickname/note/where/otherDetail/exact date
-function poolRecord(d){return{type:d.type,met:d.met,channel:chan(d),mine:d.mine,theirs:d.theirs,second:d.second,ageBand:D.age||$('#age').value,gender:D.gen||$('#gen').value,city:'Los Angeles'}}
-window.poolPreview=()=>D.dates.map(poolRecord);
-function esc(t){return String(t).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';')}
-function route(){const v=(location.hash||'#log').slice(1);['log','dash','compare','card'].forEach(x=>{$('#v-'+x).classList.toggle('hide',x!=v)});document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v))}
-function setOc(id,v){const d=D.dates.find(x=>String(x.id)===String(id));if(d){d.second=v;save();render();toast('Updated: 2nd date '+v)}}
+ $('#shareCard').innerHTML=`<div style="font-weight:800;letter-spacing:.1em;font-size:13px">DATELOG · MY 2026</div><div style="margin-top:26px" class="big">${s.n}</div><div class="s">people · ${s.total} dates</div><div style="margin-top:18px" class="big">${pct(s.sec,s.dec)}%</div><div class="s">turned into a 2nd date</div>
+ <div class="tile">🏆 Best date type: <b>${esc(s.best)}</b></div><div class="tile">📱 Best app: <b>${ba?esc(ba[0])+' ('+pct(ba[1],ba[2])+'%)':'–'}</b></div><div class="tile">🤝 Mutual interest: <b>${pct(s.mut,s.n)}%</b> · ⭐ avg <b>${s.avg}</b></div>${ev.length?`<div class="tile">🎢 Expected ${f1(avg(ev.map(d=>d.excite)))} → went ${f1(avg(ev.map(d=>d.went)))}</div>`:''}
+ <div style="margin-top:auto" class="s">${ds.length?'':'no dates logged yet · '}${all.some(d=>d.demo)?'demo data · ':''}datelog — track your dating like a runner tracks miles</div>`}
+// Pooled representation: categories & ratings only. Never nickname, note, where, any *Other detail, exact date/time.
+const oc=a=>(a||[]).slice();
+function poolRecord(d){return{dateNum:d._n||1,status:d.status,type:d.type,met:d.met,channel:chan(d),draw:(d._n||1)==1?oc(d.draw):[],excite:d.excite,hoping:oc(d.hoping),concerns:oc(d.concerns),concernsRight:{...d.concernsRight},went:d.went,mine:d.mine,theirs:d.theirs,why:oc(d.why),they:oc(d.they),second:d.second,rating:d.rating,ageBand:D.age||$('#age').value,gender:D.gen||$('#gen').value,city:'Los Angeles'}}
+window.poolPreview=()=>{people(true);return D.dates.map(poolRecord)};
+function setOc(id,v){const d=D.dates.find(x=>String(x.id)===String(id));if(d){d.second=v;save();render();toast('Updated: 2nd date '+v);if(v=='no')openForm(id,'review')}}
+document.addEventListener('click',e=>{const t=e.target.closest('.rev,.edt,.del,.oc2');if(!t)return;const id=t.dataset.id;
+ if(t.classList.contains('rev'))openForm(id,'review');else if(t.classList.contains('edt'))openForm(id,'pre');
+ else if(t.classList.contains('oc2'))setOc(id,t.dataset.v);else if(confirm('Delete this date?')){D.dates=D.dates.filter(d=>String(d.id)!==id);if(String(editId)==id)resetForm();save();render()}});
 $('#list').onchange=e=>{if(e.target.classList.contains('oc'))setOc(e.target.dataset.id,e.target.value)};
-$('#nudge').onclick=e=>{const b=e.target.closest('.oc2');if(b)setOc(b.dataset.id,b.dataset.v)};
-$('#list').onclick=e=>{const b=e.target.closest('.del');if(b&&confirm('Delete this date?')){D.dates=D.dates.filter(d=>String(d.id)!==b.dataset.id);save();render()}};
+$('#demo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo).concat(demo());save();render()};$('#demo2').onclick=()=>{$('#demo').click();location.hash='#dash'};
+$('#clearDemo').onclick=()=>{D.dates=D.dates.filter(d=>!d.demo);save();render();toast('Demo data cleared')};
+$('#reset').onclick=()=>{if(confirm('Delete ALL dates (demo and real) from this browser?')){D.dates=[];resetForm();save();render()}};
+$('#pool').onchange=e=>{D.pool=e.target.checked;save();render();toast(D.pool?'Unlocked (nothing is sent in this version)':'Sharing off — compare locked')};
 $('#age').onchange=$('#gen').onchange=()=>{D.age=$('#age').value;D.gen=$('#gen').value;save();render()};if(D.age)$('#age').value=D.age;if(D.gen)$('#gen').value=D.gen;
-f.met.onchange=()=>$('#otherDetail').classList.toggle('hide',f.met.value!='Other');
-D.dates.forEach(d=>{d.where=d.where||'';d.otherDetail=d.otherDetail||''});
-window.onhashchange=route;render();route();
+function route(){const v=(location.hash||'#log').slice(1);['log','dash','compare','card'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=v));$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v))}
+window.onhashchange=route;normalize();save();resetForm();render();route();
 </script></body></html>
