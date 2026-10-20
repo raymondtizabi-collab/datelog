@@ -37,7 +37,10 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
 .locked #cmpInner{filter:blur(7px);pointer-events:none;user-select:none}body:not(.locked) #lockOv{display:none}body:not(.locked) .lk{display:none}body:not(.locked) #lockCard h2::before{content:"🔓"}
 .pc{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:#1c2028}.pc summary{cursor:pointer;margin-top:8px}.dr{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:13px}.st{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:#2a2f3a}.st.seeing-again{background:#1f4d3a;color:#7ff0b8}.st.ended{color:var(--mu)}.st.pending{background:#4d3a1f;color:#ffd08a}
 
-.fld{margin-top:14px}.seg.multi button{flex:0 1 auto}.oth{margin-top:6px}.ins{font-weight:600;font-size:14px}.nud{border-color:var(--ac2)}.pc.up{border-color:#6a4fd0}.st.upcoming{background:#3a2f66;color:#cbbcff}
+.fld{margin-top:14px}
+.stars button{font-size:0!important;background:none!important;border:0!important;padding:2px!important;flex:0 0 auto!important;min-width:0!important}.stars button::after{content:'☆';font-size:34px;color:#ffb347}.stars button.lit::after{content:'★'}.stars{gap:10px;justify-content:flex-start}
+#metChips button{flex:0 1 auto}details#more{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:12px 14px}details#more>summary{cursor:pointer;font-weight:700;list-style:none}details#more>summary::before{content:'＋ '}details#more[open]>summary::before{content:'－ '}
+.hero h1{font-size:28px;line-height:1.15;margin:8px 0}.hero .chk{background:#0f1218;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:12px 0}.hero .chk div{margin:6px 0}.hero .logo2{font-weight:800;font-size:20px}.hero .logo2 b{color:var(--ac)}.seg.multi button{flex:0 1 auto}.oth{margin-top:6px}.ins{font-weight:600;font-size:14px}.nud{border-color:var(--ac2)}.pc.up{border-color:#6a4fd0}.st.upcoming{background:#3a2f66;color:#cbbcff}
 .cr .seg button{padding:5px}
 .cat{display:flex;align-items:center;gap:8px;margin:5px 0}.cat>span{flex:0 0 118px;font-size:14px}.cseg{display:flex;gap:4px;flex:1}.cseg button{flex:1;min-width:0;background:#0f1218;border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:6px 0;font:inherit;font-size:13px;cursor:pointer}.cseg button.on{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:700}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.chips span{font-size:12px;background:#0f1218;border:1px solid var(--line);border-radius:999px;padding:2px 8px}
@@ -47,33 +50,45 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
 <header><div class="logo">date<span>log</span></div><nav><a href="#log">Log</a><a href="#dash">Stats</a><a href="#compare">Compare</a><a href="#card">Share</a></nav></header>
 <main>
 <section id="v-log">
+ <div class="card hero hide" id="hero"><div class="row" style="justify-content:space-between"><span class="logo2"><b>♥</b> datelog</span><button type="button" class="btn g" id="heroX" style="padding:4px 10px" aria-label="Dismiss">✕</button></div>
+ <h1>Date smarter. Know your patterns.</h1><p>Track your dates, discover what actually works for you, and see how your dating life compares with others.</p>
+ <div class="chk"><div>✅ Log dates in under a minute</div><div>📊 Discover your dating patterns</div><div>👥 Compare and share with friends</div></div>
+ <div class="row"><button class="btn" id="heroGo" type="button">Log your first date →</button><button class="btn g" id="heroDemo" type="button">Try with demo data</button></div>
+ <p class="muted" style="font-size:13px;margin:10px 0 0">🔒 Private by default — stays on your device.</p></div>
+ <div class="row hide" id="heroMini" style="justify-content:space-between;margin:0 2px 10px"><span class="muted"><b style="color:var(--ac)">♥</b> Date smarter. Know your patterns. · 🔒 stays on your device</span><button type="button" class="btn g" id="heroMiniX" style="padding:2px 8px;font-size:12px">✕</button></div>
  <div id="nudges"></div>
  <div class="card" id="formCard"><div class="row" style="justify-content:space-between"><h2 id="fTitle" style="margin:0">Log a date</h2><button type="button" class="btn g hide" id="cancelEdit" style="padding:6px 12px">Cancel</button></div>
- <div class="seg" id="modeSeg" style="margin:12px 0"><button type="button" data-m="pre" class="on">📅 Before the date</button><button type="button" data-m="post">✍️ After the fact</button></div>
+ <div class="seg" id="modeSeg" style="margin:12px 0"><button type="button" data-m="post" class="on">✍️ Already happened</button><button type="button" data-m="pre">📅 Upcoming date</button></div>
  <p class="muted" id="fHelp">Nickname or initials only. No full names, photos or contact info.</p>
  <form id="f" autocomplete="off">
- <div id="preSec">
- <div class="grid">
+ <div id="quickSec">
+ <div class="grid" id="qDate">
   <div><label>Date</label><input type="date" name="date" required></div>
   <div><label>Time (optional)</label><input type="time" name="time"></div>
-  <div><label>Nickname / initials</label><input name="nick" list="nicks" maxlength="12" placeholder="e.g. J.R. or 'Climber'"><datalist id="nicks"></datalist><small class="muted" id="nickHint"></small></div>
-  <div><label>How you met</label><select name="met"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
+ </div>
+ <div class="fld"><label>Who was the date with?</label><input name="nick" list="nicks" maxlength="12" placeholder="e.g. J.R. or 'Climber'"><datalist id="nicks"></datalist><small class="muted" id="nickHint"></small></div>
+  <div class="fld"><label>Where did you meet?</label><div id="metChips" class="seg"></div><select name="met" class="hide"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
+ <div class="fld"><label>Date type</label><div class="seg" data-n="type"></div></div>
+<div class="preOnly"> <div class="fld"><label>Excitement going in</label><div class="seg" data-n="excite"></div></div>
+</div>
+ <div class="fld postOnly"><label>How was the date? <span class="muted" style="font-weight:400">(overall)</span></label><div class="seg stars" data-n="went"></div></div>
+ <div class="fld postOnly"><label>Would you see them again?</label><div class="seg" data-n="mine"></div></div>
+ </div>
+ <details id="more"><summary>Add details (optional)</summary><p class="muted" style="font-size:13px;margin:6px 0 0">Attraction, expectations, category ratings, spending, reasons, notes and more.</p><div id="moreDate"></div>
+ <div id="preSec">
+ <div class="grid">
   <div><label>Where (optional, private)</label><input name="where" maxlength="40" placeholder="e.g. Bar Bandini"></div>
  </div>
- <div class="fld"><label>Date type</label><div class="seg" data-n="type"></div></div>
  <div class="fld" id="drawBox"><label>What drew you in? <span class="muted">(first date · pick any)</span></label><div class="seg multi" data-n="draw"></div><input data-o="draw" class="hide oth" maxlength="40" placeholder="What else? (private)"></div>
- <div class="fld"><label>Excitement going in</label><div class="seg" data-n="excite"></div></div>
  <div class="fld"><label>Who do you expect to pay? (optional)</label><div class="seg" data-n="expPaid"></div></div>
  <div class="fld"><label>Hoping for</label><div class="seg multi" data-n="hoping"></div></div>
  <div class="fld"><label>Concerns going in</label><div class="seg multi" data-n="concerns"></div><input data-o="concerns" class="hide oth" maxlength="40" placeholder="Other concern (private)"></div>
  </div>
  <div id="postSec" class="hide">
  <h3 style="margin-top:18px">After the date</h3>
- <div class="fld"><label>Overall: how did the date go?</label><div class="seg" data-n="went"></div><small class="muted">Your overall score for the date (1 = awful, 5 = amazing). Rate it on its own — it isn't calculated from the categories below.</small></div>
- <div class="fld"><label>Rate them by category <span class="muted" style="font-weight:400">(optional — tap to rate, tap again to clear)</span></label><div id="catRows"></div></div>
+ <div class="fld"><label>Rate them by category <span class="muted" style="font-weight:400">(optional — tap to rate, tap again to clear)</span></label><div id="catRows"></div><small class="muted">Your overall star rating above is its own score — not calculated from these.</small></div>
  <div class="grid fld"><div><label>What I spent (optional)</label><input name="spend" type="text" inputmode="decimal" placeholder="$0.00" autocomplete="off"></div><div><label>Who paid? (optional)</label><div class="seg" data-n="paid"></div></div></div>
  <div class="grid fld">
-  <div><label>Did you want a 2nd date?</label><div class="seg" data-n="mine"></div></div>
   <div><label>Did they?</label><div class="seg" data-n="theirs"></div></div>
   <div><label id="secLbl">2nd date happened?</label><div class="seg" data-n="second"></div></div>
  </div>
@@ -86,12 +101,14 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  </div>
  </div>
  <div id="shotFld" style="margin-top:12px;display:block"><label>Add profile screenshot (optional)</label><label class="btn g" for="shotIn" id="shotBtn" style="display:inline-block;padding:9px 14px">📷 Choose from Photos</label><input type="file" id="shotIn" accept="image/*" class="hide"><div id="shotPrev" class="hide" style="margin-top:8px;position:relative;width:fit-content"><img id="shotImg" alt="Profile screenshot preview" style="max-width:120px;max-height:200px;border-radius:10px;display:block"><button type="button" id="shotRm" class="btn g" style="position:absolute;top:4px;right:4px;padding:2px 8px">✕</button></div><p class="muted" style="font-size:13px;margin:6px 0 0">🔒 Stays on your device. It's only sent when you share with friends you choose — never in the pooled stats.</p></div>
- <div class="row" style="margin-top:16px"><button class="btn" id="saveBtn">Save upcoming date</button><span class="muted">Stored only in this browser (localStorage).</span></div>
+ </details>
+ <div class="row" style="margin-top:16px"><button class="btn" id="saveBtn">Save upcoming date</button><button class="btn g preOnly" id="saveAsk" type="button">Save &amp; ask friends 🔮</button><span class="muted">Stored only in this browser (localStorage).</span></div>
  </form></div>
  <div class="card"><h2>People</h2><div id="upcoming"></div><div id="list"></div>
- <div class="row" style="margin-top:12px"><button class="btn g" id="demo">Try with demo data</button><button class="btn g" id="clearDemo">Clear demo data</button><button class="btn g" id="reset">Reset all data</button><span class="muted" id="demoNote"></span></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn g" id="demo">Try with demo data</button><button class="btn g" id="clearDemo">Clear demo data</button><button class="btn g" id="reset">Reset all data</button><button class="btn g" id="bkExp" type="button">⬇️ Export backup</button><label class="btn g" for="bkIn" style="display:inline-block">⬆️ Import backup</label><input type="file" id="bkIn" accept="application/json,.json" class="hide"><span class="muted" id="demoNote"></span></div></div>
 </section>
 <section id="v-dash" class="hide">
+ <div class="card nud hide" id="bkNote"><b>💾 Back up your data</b><p class="muted" style="margin:6px 0">Your dates live only in this browser. Export a backup file now and then (last: <span id="bkLast">never</span>).</p><button class="btn" type="button" onclick="exportData()">Export backup</button></div>
  <div class="card hide" id="empty"><h2>No dates yet</h2><p class="muted">Your stats appear once you review a date. <a href="#log" style="color:var(--ac)">Log one</a>, or explore first:</p><button class="btn" id="demo2">Try with demo data</button></div>
  <div id="dashBody">
  <div class="card"><h2>Your dating stats</h2><div class="kpis" id="kpis"></div></div>
@@ -164,14 +181,18 @@ $('#f').addEventListener('click',e=>{const b=e.target.closest('.seg[data-n] butt
  else{const on=b.classList.contains('on');$$('button',g).forEach(x=>x.classList.remove('on'));if(!(on&&['rating','excite','went','paid','expPaid'].includes(n)))b.classList.add('on')}
  othVis(n);upd()});
 const showWhy=m=>m=='no',showThey=(m,t,s)=>(m=='yes'||m=='maybe')&&(t=='no'||(t=='unknown'&&s=='no'));
-let mode='pre',editId=null;const f=$('#f');
-function upd(){$('#postSec').classList.toggle('hide',mode=='pre');$$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.m==(mode=='review'?'post':mode)));$('#modeSeg').classList.toggle('hide',mode=='review');
+let mode='post',editId=null,askAfter=false;const f=$('#f');
+function syncMet(){const c=$('#metChips');if(!c.children.length){c.innerHTML=[...f.met.options].map(o=>`<button type="button" data-v="${esc(o.value)}">${esc(o.value)}</button>`).join('');c.onclick=e=>{const b=e.target.closest('button');if(!b)return;f.met.value=b.dataset.v;f.met.onchange();syncMet()}}$$('button',c).forEach(b=>b.classList.toggle('on',b.dataset.v==f.met.value))}
+function upd(){syncMet();$$('#f .preOnly').forEach(e=>e.classList.toggle('hide',mode!='pre'));$$('#f .postOnly').forEach(e=>e.classList.toggle('hide',mode=='pre'));
+ {const q=$('#qDate');if(mode=='pre'){if(q.parentNode.id!='quickSec')$('#quickSec').prepend(q)}else if(q.parentNode.id!='moreDate')$('#moreDate').append(q)}
+ {const on=+getSeg('went')||0;$$('#f .stars button').forEach((b,i)=>b.classList.toggle('lit',i<on))}
+ $('#saveAsk').classList.toggle('hide',mode!='pre'||!!editId);$('#postSec').classList.toggle('hide',mode=='pre');$$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.m==(mode=='review'?'post':mode)));$('#modeSeg').classList.toggle('hide',mode=='review');
  $('#whyBox').classList.toggle('hide',!showWhy(getSeg('mine')));$('#theyBox').classList.toggle('hide',!showThey(getSeg('mine'),getSeg('theirs'),getSeg('second')));
  const cs=getSeg('concerns').filter(c=>c!='None');$('#crBox').classList.toggle('hide',!cs.length);const prev={};$$('#crRows .cr').forEach(r=>{const on=$('.on',r);if(on)prev[r.dataset.c]=on.textContent});
  $('#crRows').innerHTML=cs.map(c=>`<div class="cr dr" data-c="${esc(c)}"><span>${esc(c)}</span><span class="seg" style="flex:0 0 140px">${['yes','no'].map(v=>`<button type="button"${(prev[c]||crInit[c])==v?' class="on"':''}>${v}</button>`).join('')}</span></div>`).join('');
  const p=findP(f.nick.value),isFirst=!p||(editId&&p.all[0].id==editId);$('#drawBox').classList.toggle('hide',!isFirst);
- $('#saveBtn').textContent=mode=='pre'?(editId?'Save changes':'Save upcoming date'):mode=='review'?'Save review':'Save date';
- $('#fTitle').textContent=mode=='review'?'Review: '+(f.nick.value||'date'):editId?'Edit upcoming date':'Log a date';$('#cancelEdit').classList.toggle('hide',!editId)}
+ $('#saveBtn').textContent=mode=='pre'?(editId?'Save changes':'Save upcoming date'):mode=='review'?'Save review':'Save date';$('#fTitle').dataset.q=1;
+ $('#fTitle').textContent=mode=='review'?'Review: '+(f.nick.value||'date'):editId?'Edit upcoming date':mode=='pre'?'Log an upcoming date':'Quick log';$('#cancelEdit').classList.toggle('hide',!editId)}
 let crInit={};$('#crRows').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const r=b.closest('.cr');$$('button',r).forEach(x=>x.classList.toggle('on',x===b))});
 $('#modeSeg').onclick=e=>{const b=e.target.closest('button');if(b){mode=b.dataset.m;upd()}};
 const key=d=>String(d.nick||'').trim().toLowerCase();
@@ -184,12 +205,12 @@ function people(all){const m={};D.dates.forEach(d=>(m[key(d)]=m[key(d)]||[]).pus
 function normalize(){people(true).forEach(p=>p.all.slice(0,-1).forEach(d=>{if(d.status!='upcoming')d.second='yes'}));
  D.dates.forEach(d=>{d.status=d.status||'done';for(const k of ['where','otherDetail','drawOther','whyOther','theyOther','concernOther','note','time'])d[k]=d[k]||'';for(const k of ['draw','why','they','hoping','concerns'])d[k]=d[k]||[];d.concernsRight=d.concernsRight||{};d.preds=d.preds||[];if(d.status=='done'&&!d.second)d.second='not yet'})}
 const due=d=>d.status=='upcoming'&&new Date(d.date+'T'+(d.time||'23:59'))<new Date();
-function resetForm(){editId=null;setCats({});setShot(null);crInit={};f.reset();f.date.value=today();$$('#f .seg button').forEach(b=>b.classList.remove('on'));setSeg('second','not yet');$$('#f .oth').forEach(i=>i.classList.add('hide'));f.otherDetail.classList.add('hide');$('#nickHint').textContent='';$('#secLbl').textContent='2nd date happened?';if(mode=='review')mode='pre';upd()}
+function resetForm(){editId=null;setCats({});setShot(null);crInit={};f.reset();f.date.value=today();$$('#f .seg button').forEach(b=>b.classList.remove('on'));setSeg('second','not yet');$$('#f .oth').forEach(i=>i.classList.add('hide'));f.otherDetail.classList.add('hide');$('#nickHint').textContent='';$('#secLbl').textContent='2nd date happened?';if(mode=='review')mode='post';const mo=$('#more');if(mo)mo.open=false;upd()}
 function openForm(id,m){const d=D.dates.find(x=>String(x.id)==String(id));if(!d)return;resetForm();editId=d.id;mode=m;crInit=d.concernsRight||{};setCats(d.cats);setShot(getShot(d.id));
  for(const k of ['date','time','nick','met','where','note','otherDetail'])f[k].value=d[k]||'';f.spend.value=d.spend!=null?d.spend:'';f.otherDetail.classList.toggle('hide',d.met!='Other');
  for(const k of Object.keys(OPT))setSeg(k,k=='second'?(d.second||'not yet'):d[k]);for(const [k,o] of Object.entries(OTH)){const i=$(`#f .oth[data-o=${k}]`);if(i)i.value=d[o]||''}
- const p=findP(d.nick);if(p&&p.all[0].id!=d.id)$('#secLbl').textContent='Saw them again after this?';location.hash='#log';upd();$('#formCard').scrollIntoView({block:'start'})}
-$('#cancelEdit').onclick=()=>{mode='pre';resetForm()};
+ const p=findP(d.nick);if(p&&p.all[0].id!=d.id)$('#secLbl').textContent='Saw them again after this?';location.hash='#log';$('#more').open=true;upd();$('#formCard').scrollIntoView({block:'start'})}
+$('#cancelEdit').onclick=()=>{mode='post';resetForm()};
 f.nick.oninput=()=>{if(editId)return upd();const p=findP(f.nick.value);$('#nickHint').textContent=p?'↪ Date #'+(p.all.length+1)+' with '+p.nick+' · how you met carried over':'';$('#secLbl').textContent=p?'Saw them again after this?':'2nd date happened?';if(p){f.met.value=p.met;f.otherDetail.value=p.od||'';f.met.onchange()}upd()};
 f.met.onchange=()=>f.otherDetail.classList.toggle('hide',f.met.value!='Other');
 f.onsubmit=e=>{e.preventDefault();const nick=f.nick.value.trim().slice(0,12);if(!nick){toast('Add a nickname or initials');return}if(!f.date.value){toast('Pick a date');return}
@@ -199,14 +220,16 @@ f.onsubmit=e=>{e.preventDefault();const nick=f.nick.value.trim().slice(0,12);if(
  if(!$('#drawBox').classList.contains('hide')){r.draw=getSeg('draw');r.drawOther=ov('draw')}r.concernOther=ov('concerns');
  const post=mode!='pre';if(post){Object.assign(r,{status:'done',went:+getSeg('went')||null,mine:getSeg('mine'),theirs:getSeg('theirs'),second:getSeg('second'),rating:+getSeg('rating')||null,note:f.note.value.trim(),cats:getCats(),spend:parseSpend(f.spend.value),paid:getSeg('paid')});
   if(f.spend.value.trim()&&r.spend==null){toast('Spend should be a number like 42.50');return}
-  if(!r.mine||!r.theirs||!r.second){toast('Pick interest & outcome');return}
+  if(!r.mine){toast('Would you see them again?');return}if(!r.theirs)r.theirs='unknown';if(!r.second)r.second='not yet';
   if(showWhy(r.mine)){r.why=getSeg('why');r.whyOther=ov('why')}if(showThey(r.mine,r.theirs,r.second)){r.they=getSeg('they');r.theyOther=ov('they')}
   $$('#crRows .cr').forEach(x=>{const on=$('.on',x);if(on)r.concernsRight[x.dataset.c]=on.textContent})}
  else Object.assign(r,{status:'upcoming',cats:{},spend:null,paid:null,went:null,mine:null,theirs:null,second:null,rating:null,note:''});
  if(BAD.test([r.nick,r.note,r.where,r.otherDetail,r.drawOther,r.whyOther,r.theyOther,r.concernOther].join(' '))){toast('No contact info please');return}
  const sid=editId||Date.now();try{shot?localStorage.setItem(SK+sid,shot):localStorage.removeItem(SK+sid)}catch(e){toast('Screenshot too big to store')}
  if(editId){const d=D.dates.find(x=>x.id==editId);Object.assign(d,r)}else{const p=findP(nick);if(p&&p.last)p.last.second='yes';D.dates.push({id:sid,...r})}
- const was=mode;normalize();save();mode='pre';resetForm();toast(was=='pre'?'Upcoming date saved ✓':'Saved ✓');render()};
+ const was=mode,aa=askAfter&&r.status=='upcoming';askAfter=false;normalize();save();mode=was=='review'?'post':was;resetForm();toast(was=='pre'?'Upcoming date saved ✓':'Saved ✓');render();
+ if(aa)setTimeout(()=>{const b=$(`.ask[data-id="${sid}"]`);if(b){b.scrollIntoView({block:'center'});b.click()}},50)};
+$('#saveAsk').onclick=()=>{askAfter=true;f.requestSubmit?f.requestSubmit():$('#saveBtn').click()};
 function demo(){const T=OPT.type,A=['Hinge','Hinge','Bumble','Tinder','In person','Raya','Set up','At work'];
  const pat=[[0,0,'maybe','unknown','no',3,3,2],[1,1,'yes','yes','yes',4,4,4],[3,0,'yes','yes','yes',5,4,5],[0,2,'no','unknown','no',2,3,2],[2,0,'yes','no','no',3,4,3],[1,4,'yes','yes','yes',4,3,4],[0,3,'maybe','yes','no',3,2,3],[3,6,'yes','yes','yes',5,4,5],[1,0,'no','yes','no',2,4,2],[2,1,'maybe','unknown','no',3,3,3],[0,0,'no','no','no',2,2,1],[3,5,'yes','yes','yes',4,5,4],[1,2,'yes','unknown','no',3,3,3],[2,7,'yes','yes','yes',4,3,4],[4,0,'maybe','no','not yet',3,4,3]];
  const dr=[['Looks'],['Banter/chat'],['Shared interests','Banter/chat'],['Looks'],['Their profile'],['Vibe in person'],['Looks','Their profile'],['Mutual friends','Vibe in person'],['Looks'],['Their profile'],['Looks'],['Banter/chat'],['Not sure'],['Banter/chat'],['Looks']];
@@ -230,7 +253,7 @@ const INP=['In person','At work','Set up'];const chan=d=>INP.includes(d.met)?'In
 const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length):null,f1=x=>x==null?'–':x.toFixed(1);
 function stats(){const P=people(),n=P.length,done=D.dates.filter(d=>d.status!='upcoming'),res=P.filter(p=>p.resolved).length,sec=P.filter(p=>p.reached2).length,r3=P.filter(p=>p.reached3).length,want=P.filter(p=>p.first.mine=='yes').length,mut=P.filter(p=>p.first.mine=='yes'&&p.first.theirs=='yes').length,rt=done.filter(d=>d.rating);
  const bt=group(d=>d.type).filter(r=>r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2]);return{P,n,done,total:done.length,sec,dec:res,pend:n-res,r3,want,mut,avg:rt.length?f1(avg(rt.map(d=>d.rating))):'–',best:bt[0]?bt[0][0]:'–'}}
-function render(){normalize();const s=stats(),all=D.dates,ds=s.done;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
+function render(){normalize();heroUpd();const s=stats(),all=D.dates,ds=s.done;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
  const PA=people(true);$('#nicks').innerHTML=PA.map(p=>`<option value="${esc(p.nick)}">`).join('');
  // nudges
  const dueL=all.filter(due).sort((a,b)=>a.date.localeCompare(b.date)),old=s.P.filter(p=>p.last.second=='not yet'&&!p.up.length&&(Date.now()-new Date(p.last.date))/864e5>14).sort((a,b)=>a.last.date.localeCompare(b.last.date))[0];
@@ -371,5 +394,23 @@ function route(){let h=(location.hash||'#log').slice(1),v=h,arg='';const i=h.ind
  if(v=='callit')friendView(dec(arg));if(v=='verdict')verdict(arg);if(!['log','dash','compare','card','callit','verdict'].includes(v))v='log';
  const sec={callit:'friend',verdict:'verdict'}[v]||v;['log','dash','compare','card','friend','verdict'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=sec));$('nav').classList.toggle('hide',v=='callit');$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v));$('#askBox').classList.add('hide')}
 $('#meName').value=D.me||'';$('#meName').onchange=e=>{D.me=e.target.value.trim().slice(0,20);save();toast('Saved')};
-window.onhashchange=route;normalize();save();resetForm();render();route();
+function heroUpd(){const has=D.dates.length>0;$('#hero').classList.toggle('hide',has||!!D.heroOff);$('#heroMini').classList.toggle('hide',!has||!!D.heroOff);
+ const b=$('#bkNote');if(b){const L=D.lastBackup;b.classList.toggle('hide',!D.dates.some(d=>!d.demo)||!!(L&&Date.now()-L<30*864e5));$('#bkLast').textContent=L?new Date(L).toLocaleDateString():'never'}}
+$('#heroX').onclick=$('#heroMiniX').onclick=()=>{D.heroOff=true;save();heroUpd()};
+$('#heroGo').onclick=()=>{mode='post';resetForm();$('#formCard').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>f.nick.focus({preventScroll:true}),400)};
+$('#heroDemo').onclick=()=>$('#demo').click();
+async function exportData(){const shots={};Object.keys(localStorage).filter(k=>k.startsWith(SK)).forEach(k=>shots[k.slice(SK.length)]=localStorage[k]);
+ const blob=new Blob([JSON.stringify({app:'datelog',v:1,exported:new Date().toISOString(),data:JSON.parse(JSON.stringify(D,(k,v)=>k=='_n'?undefined:v)),shots},null,1)],{type:'application/json'}),name='datelog-backup-'+today()+'.json',file=new File([blob],name,{type:'application/json'});
+ const done=()=>{D.lastBackup=Date.now();save();heroUpd();toast('Backup exported ✓')};
+ if(navigator.canShare&&matchMedia('(pointer:coarse)').matches){try{if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Datelog backup'});return done()}}catch(e){if(e&&e.name=='AbortError')return}}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);done()}
+$('#bkExp').onclick=exportData;
+$('#bkIn').onchange=async e=>{const fl=e.target.files[0];e.target.value='';if(!fl)return;let j;try{j=JSON.parse(await fl.text())}catch(x){return toast('Not a valid backup file')}
+ const nd=j&&j.data&&Array.isArray(j.data.dates)?j.data:null;if(!nd||j.app!='datelog')return toast('Not a Datelog backup');
+ let how=null;if(!D.dates.length||confirm(`Backup has ${nd.dates.length} dates. MERGE into your ${D.dates.length} current dates?\n\nOK = merge · Cancel = more options`))how='merge';else if(confirm('REPLACE all current data with this backup? This cannot be undone.'))how='replace';if(!how)return;
+ const sh=j.shots||{};if(how=='replace'){Object.keys(localStorage).filter(k=>k.startsWith(SK)).forEach(k=>localStorage.removeItem(k));D=nd;D.dates=D.dates||[]}
+ else{const ids=new Set(D.dates.map(d=>String(d.id)));let n=0;nd.dates.forEach(d=>{if(!ids.has(String(d.id))){D.dates.push(d);n++}});['me','age','gen'].forEach(k=>{if(D[k]==null&&nd[k]!=null)D[k]=nd[k]});toast('Merged '+n+' new dates')}
+ Object.entries(sh).forEach(([id,u])=>{if(D.dates.some(d=>String(d.id)==id)&&!localStorage.getItem(SK+id))try{localStorage.setItem(SK+id,u)}catch(x){}});
+ D.dates.forEach(d=>{['why','they','hoping','concerns','draw'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});d.concernsRight=d.concernsRight||{}});normalize();save();resetForm();render();heroUpd();if(how=='replace')toast('Backup restored ✓')};
+window.onhashchange=route;normalize();save();resetForm();render();route();heroUpd();
 </script></body></html>
