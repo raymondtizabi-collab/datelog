@@ -61,13 +61,32 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
 <header><a href="#home" class="logo" style="color:inherit;text-decoration:none">date<span>log</span></a><nav><a href="#home">Home</a><a href="#log">Log</a><a href="#dash">Stats</a><a href="#compare">Compare</a><a href="#card">Share</a></nav></header>
 <main>
 <section id="v-home" class="hide">
- <div class="card hero" id="hero"><div class="row" style="justify-content:space-between"><span class="logo2"><b>♥</b> datelog</span></div>
- <h1>Date smarter. Know your patterns.</h1><p>Track your dates, discover what actually works for you, and see how your dating life compares with others.</p>
- <div class="chk"><div>✅ Log dates in under a minute</div><div>📊 Discover your dating patterns</div><div>👥 Compare and share with friends</div></div>
- <div class="row"><button class="btn" id="heroGo" type="button">Log your first date →</button><button class="btn g" id="heroDemo" type="button">Try with demo data</button></div>
- <p class="muted" style="font-size:13px;margin:10px 0 0">🔒 Private by default — stays on your device.</p></div>
-
- <div class="card hs"><h2>What actually gets you a 2nd date?</h2><p class="muted">Rate a few dates. See what really moves the needle — for you.</p>
+ <div class="card hero" id="hero"><span class="logo2"><b>♥</b> datelog</span>
+ <h1>Your dating life has a story. See what it’s telling you.</h1>
+ <p class="sub">Remember your dates. Discover your patterns. Let your friends predict what happens next.</p>
+ <div class="mini pv" aria-label="Example preview"><span class="ex">Preview · example</span><div class="pvq">Friday’s date with “The Musician”</div><b class="pvb">Will there be a 2nd date?</b>
+  <div class="pchips"><span>😍 Yes — Sam</span><span>🤔 No — Alex</span><span>😍 Yes — Priya</span></div><small class="muted">2 of 3 friends say yes · reveal after the date</small></div>
+ <button class="btn big" id="heroGo" type="button">Log your first date →</button>
+ <button class="lnk" id="heroDemo" type="button">Or explore a sample dating history</button>
+ <p class="muted pl">🔒 Your dating history stays on your device. Only what you choose to share leaves it.</p></div>
+ <div class="card" id="how"><h2>How it works</h2>
+  <div class="how"><div><b>1</b><div><strong>Log your dates</strong><span>A minute each. Private — saved only on this device.</span></div></div>
+  <div><b>2</b><div><strong>Discover your patterns</strong><span>What gets you great dates, and who you click with.</span></div></div>
+  <div><b>3</b><div><strong>Let your friends call it 🔮</strong><span>Send a prediction link before the date, then reveal who guessed right.</span></div></div></div>
+  <p class="muted" style="margin:10px 0 0">Sharing is always optional — steps 1 and 2 never leave your phone.</p></div>
+ <div id="homeNudge"></div>
+ <div class="card hs fun"><h2 style="font-size:24px">Make your friends call it 🔮</h2><p>Before the date, your friends bet on how it goes. After, the app crowns who knows you best. Works from your very first date — no history needed, and friends don’t need an account.</p>
+  <div class="steps"><div><b>1</b>Share your upcoming date</div><div><b>2</b>Friends lock in guesses</div><div><b>3</b>Reveal the verdict &amp; crown the Oracle</div></div>
+  <div class="mini chat"><span class="ex">Example</span>
+   <div class="bub me">Call it 🔮 Love story or one-date wonder? I’ve got a date with Thomas Friday. Make your prediction:</div>
+   <div class="bub them"><small>Sam</small>😍 Love story. 4/5. They close the bar 🍸</div>
+   <div class="bub them"><small>Kai</small>💀 One-date wonder</div>
+   <div class="bub me">Verdict’s in 👀</div></div>
+  <div class="mini vd"><span class="ex">Example</span><div class="vt">🔮 THE VERDICT</div><div class="vr"><div><b>4/5</b><small>how it went</small></div><div><b>Yes</b><small>2nd date</small></div></div>
+   <div class="lb"><div>🥇 Sam <small>🔮 Oracle</small><b>100%</b></div><div>🥈 Ana <small>👀 Good read</small><b>75%</b></div><div>🥉 Kai <small>🙈 Way off</small><b>13%</b></div></div></div>
+  <button class="btn big" id="homeAsk" type="button">Plan a date &amp; ask friends 🔮</button>
+  <p class="dyk"><b>Did you know?</b> Friends used to be America’s #1 matchmaker. Among straight couples, meeting through friends fell from 33% (1995) to 20% (2017), while meeting online rose to 39%. <a href="https://www.pnas.org/doi/10.1073/pnas.1908630116" target="_blank" rel="noopener">Rosenfeld, Thomas &amp; Hausen, PNAS 2019</a></p></div>
+ <div class="card hs"><h2>What actually makes a good date — for you?</h2><p class="muted">Rate a few dates. See what really moves the needle.</p>
   <div class="mini"><span class="ex">Example</span>
    <div class="mb"><span>Chemistry</span><i style="width:calc((100% - 170px)*1)"></i><b>+2.0</b></div><div class="mb"><span>Humor</span><i style="width:calc((100% - 170px)*.8)"></i><b>+1.6</b></div><div class="mb"><span>Conversation</span><i style="width:calc((100% - 170px)*.4)"></i><b>+0.8</b></div>
    <div class="split"><div><b>62%</b><small>2nd-date rate · met via friends</small></div><div><b>31%</b><small>via apps</small></div></div></div><p class="dyk"><b>Did you know?</b> 49% of U.S. singles have fallen for someone they weren’t initially attracted to — and 41% would consider a 2nd date even if the first wasn’t exciting. <a href="https://mtch.com/news/match-unveils-15th-annual-singles-in-america-study/" target="_blank" rel="noopener">Match Singles in America &amp; Kinsey Institute, 2026</a></p></div>
@@ -75,17 +94,7 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
   <div class="mini"><span class="ex">Example</span>
    <div class="evr"><div><small>Expected</small><b>5/5</b></div><span>→</span><div><small>Actual</small><b class="lo">2/5</b></div></div>
    <div class="ln">😬 Concerns that came true: <b>1 of 3</b></div><div class="ln">💸 Expected split → <b>They paid</b></div></div><p class="dyk"><b>Did you know?</b> In Gottman’s long-term studies, 69% of couples’ conflicts are “perpetual” — rooted in personality differences that never fully go away. Great couples manage them; they don’t solve them. <a href="https://www.gottman.com/blog/managing-conflict-solvable-vs-perpetual-problems/" target="_blank" rel="noopener">The Gottman Institute</a></p></div>
- <div class="card hs fun"><h2 style="font-size:24px">Make your friends call it 🔮</h2><p>Before the date, your friends bet on how it goes. After, the app crowns who knows you best.</p>
-  <p class="dyk"><b>Did you know?</b> Friends used to be America’s #1 matchmaker. Among straight couples, meeting through friends fell from 33% (1995) to 20% (2017), while meeting online rose to 39%. <a href="https://www.pnas.org/doi/10.1073/pnas.1908630116" target="_blank" rel="noopener">Rosenfeld, Thomas &amp; Hausen, PNAS 2019</a></p><div class="steps"><div><b>1</b>Share your upcoming date</div><div><b>2</b>Friends lock in guesses</div><div><b>3</b>Reveal the verdict &amp; crown the Oracle</div></div>
-  <div class="mini chat"><span class="ex">Example</span>
-   <div class="bub me">I’d like your input! 🔮 Dinner date with Thomas. Will there be a 2nd?</div>
-   <div class="bub them"><small>Sam</small>Yes. 4/5. They close the bar 🍸</div>
-   <div class="bub them"><small>Kai</small>No 2nd. Total dud 💀</div>
-   <div class="bub me">Verdict’s in 👀</div></div>
-  <div class="mini vd"><span class="ex">Example</span><div class="vt">🔮 THE VERDICT</div><div class="vr"><div><b>4/5</b><small>how it went</small></div><div><b>Yes</b><small>2nd date</small></div></div>
-   <div class="lb"><div>🥇 Sam <small>🔮 Oracle</small><b>100%</b></div><div>🥈 Ana <small>👀 Good read</small><b>75%</b></div><div>🥉 Kai <small>🙈 Way off</small><b>13%</b></div></div></div>
-  <button class="btn big" id="homeAsk" type="button">Plan a date &amp; ask friends 🔮</button></div>
- <div class="card hs" style="text-align:center"><h2>🔒 Private by default.<br>Share only if you want to.</h2><p class="muted">Everything stays on your device.</p><button class="btn" id="homeGo2" type="button">Log a date →</button></div>
+ <div class="card hs" style="text-align:center"><h2>🔒 Private by default.<br>Share only if you want to.</h2><p class="muted">Your logs, notes and screenshots stay on this device. Friend links, share cards and the optional pooled stats send only what each one lists under “Exactly what gets shared?”.</p><button class="btn" id="homeGo2" type="button">Log a date →</button></div>
 </section>
 <section id="v-log">
  <div id="nudges"></div>
