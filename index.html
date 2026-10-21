@@ -94,14 +94,12 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <p class="muted" id="fHelp">Nickname or initials only. No full names, photos or contact info.</p>
  <form id="f" autocomplete="off">
  <div id="quickSec">
- <div class="grid" id="qDate">
-  <div><label>Date</label><input type="date" name="date" required></div>
-  <div><label>Time (optional)</label><input type="time" name="time"></div>
- </div>
- <div class="fld"><label>Who was the date with?</label><input name="nick" list="nicks" maxlength="12" placeholder="e.g. J.R. or 'Climber'"><datalist id="nicks"></datalist><small class="muted" id="nickHint"></small></div>
-  <div class="fld"><label>Where did you meet?</label><div id="metChips" class="seg"></div><select name="met" class="hide"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
- <div class="fld"><label>Date type</label><div class="seg" data-n="type"></div></div>
-<div class="preOnly"> <div class="fld"><label>Excitement going in</label><div class="seg" data-n="excite"></div></div>
+<div class="fld" id="qNick"><label>Who was the date with?</label><input name="nick" list="nicks" maxlength="12" placeholder="e.g. J.R. or 'Climber'"><datalist id="nicks"></datalist><small class="muted" id="nickHint"></small></div>
+ <div class="fld" id="qDate"><label>When was the date?</label><input type="date" name="date" required><input type="hidden" name="time" value=""></div>
+
+  <div class="fld"><label>How did you meet?</label><div id="metChips" class="seg"></div><select name="met" class="hide"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
+ <div class="fld"><label>What did you do?</label><div class="seg" data-n="type"></div></div>
+<div class="preOnly"> <div class="fld"><label>How excited are you?</label><div class="seg" data-n="excite"></div></div>
 </div>
  <div class="fld postOnly"><label>How was the date? <span class="muted" style="font-weight:400">(overall)</span></label><div class="seg stars" data-n="went"></div></div>
  <div class="fld postOnly"><label>Would you see them again?</label><div class="seg" data-n="mine"></div></div>
@@ -109,9 +107,9 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <details id="more"><summary>Add details (optional)</summary><p class="muted" style="font-size:13px;margin:6px 0 0">Attraction, expectations, category ratings, spending, reasons, notes and more.</p><div id="moreDate"></div>
  <div id="preSec">
  <div class="grid">
-  <div><label>Where (optional, private)</label><input name="where" maxlength="40" placeholder="e.g. Bar Bandini"></div>
+  <div><label>Where did you go? <span class="muted" style="font-weight:400">(optional, private)</span></label><input name="where" maxlength="40" placeholder="e.g. Bar Bandini"></div>
  </div>
- <div class="fld" id="drawBox"><label>What drew you in? <span class="muted">(first date · pick any)</span></label><div class="seg multi" data-n="draw"></div><input data-o="draw" class="hide oth" maxlength="40" placeholder="What else? (private)"></div>
+ <div class="fld" id="drawBox"><label>Why are you interested? <span class="muted">(first date · pick any)</span></label><div class="seg multi" data-n="draw"></div><input data-o="draw" class="hide oth" maxlength="40" placeholder="What else? (private)"></div>
  <div class="fld"><label>Who do you expect to pay? (optional)</label><div class="seg" data-n="expPaid"></div></div>
  <div class="fld"><label>Hoping for</label><div class="seg multi" data-n="hoping"></div></div>
  <div class="fld"><label>Concerns going in</label><div class="seg multi" data-n="concerns"></div><input data-o="concerns" class="hide oth" maxlength="40" placeholder="Other concern (private)"></div>
@@ -218,7 +216,7 @@ const showWhy=m=>m=='no',showThey=(m,t,s)=>(m=='yes'||m=='maybe')&&(t=='no'||(t=
 let mode='post',editId=null,askAfter=false;const f=$('#f');
 function syncMet(){const c=$('#metChips');if(!c.children.length){c.innerHTML=[...f.met.options].map(o=>`<button type="button" data-v="${esc(o.value)}">${esc(o.value)}</button>`).join('');c.onclick=e=>{const b=e.target.closest('button');if(!b)return;f.met.value=b.dataset.v;f.met.onchange();syncMet()}}$$('button',c).forEach(b=>b.classList.toggle('on',b.dataset.v==f.met.value))}
 function upd(){syncMet();$$('#f .preOnly').forEach(e=>e.classList.toggle('hide',mode!='pre'));$$('#f .postOnly').forEach(e=>e.classList.toggle('hide',mode=='pre'));
- {const q=$('#qDate');if(mode=='pre'){if(q.parentNode.id!='quickSec')$('#quickSec').prepend(q)}else if(q.parentNode.id!='moreDate')$('#moreDate').append(q)}
+ {const q=$('#qDate');if(mode=='pre'){if(q.parentNode.id!='quickSec')$('#qNick').after(q)}else if(q.parentNode.id!='moreDate')$('#moreDate').append(q)}
  {const on=+getSeg('went')||0;$$('#f .stars button').forEach((b,i)=>b.classList.toggle('lit',i<on))}
  $('#saveAsk').classList.toggle('hide',mode!='pre'||!!editId);$('#postSec').classList.toggle('hide',mode=='pre');$$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.m==(mode=='review'?'post':mode)));$('#modeSeg').classList.toggle('hide',mode=='review');
  $('#whyBox').classList.toggle('hide',!showWhy(getSeg('mine')));$('#theyBox').classList.toggle('hide',!showThey(getSeg('mine'),getSeg('theirs'),getSeg('second')));
