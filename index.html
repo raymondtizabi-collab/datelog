@@ -98,7 +98,7 @@ input,select,textarea{width:100%;background:#0f1218;border:1px solid var(--line)
  <div class="fld" id="qDate"><label data-past="When was the date?" data-fut="When is the date?">When was the date?</label><input type="date" name="date" required><input type="hidden" name="time" value=""></div>
 
   <div class="fld"><label>How did you meet?</label><div id="metChips" class="seg"></div><select name="met" class="hide"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
- <div class="fld"><label data-past="What did you do?" data-fut="What are you doing?">What did you do?</label><div class="seg" data-n="type"></div></div>
+ <div class="fld"><label data-past="What did you do?" data-fut="What are you doing?">What did you do?</label><div class="seg" data-n="type"></div><input data-o="type" class="hide oth" maxlength="40" placeholder="What are you doing? (private)"></div>
 <div class="preOnly"> <div class="fld"><label>How excited are you?</label><div class="seg" data-n="excite"></div></div>
 </div>
  <div class="fld postOnly"><label>How was the date? <span class="muted" style="font-weight:400">(overall)</span></label><div class="seg stars" data-n="went"></div></div>
@@ -183,7 +183,7 @@ const OPT={expPaid:['I will','They will','Split','Not sure'],paid:['I paid','The
  mine:['yes','maybe','no'],theirs:['yes','unknown','no'],second:['not yet','yes','no'],
  why:['No chemistry','Not physically attracted','Conversation fell flat','Different goals or values','Looked different than photos','Red flag','Too far / bad timing','Into someone else','Other'],
  they:['No chemistry','Not their type','I was too nervous / off night','Different goals',"They're seeing someone else",'Bad timing','They ghosted / no idea','Other']};
-const OTH={draw:'drawOther',concerns:'concernOther',why:'whyOther',they:'theyOther'};
+const OTH={type:'typeOther',draw:'drawOther',concerns:'concernOther',why:'whyOther',they:'theyOther'};
 const K='datelog.v1';let D=JSON.parse(localStorage.getItem(K)||'null');if(!D)D={dates:[],pool:false};
 // profile screenshot: own localStorage key, never inside D (so never in pool/share-link payloads)
 const SK='datelog.shot.';let shot=null;const getShot=id=>localStorage.getItem(SK+id);
@@ -207,7 +207,7 @@ $$('.seg[data-n]').forEach(g=>g.innerHTML=OPT[g.dataset.n].map(o=>`<button type=
 const segRoot=n=>$(`#f .seg[data-n=${n}]`);
 function getSeg(n){const g=segRoot(n),on=$$('.on',g).map(b=>b.textContent);return g.classList.contains('multi')?on:(on[0]??null)}
 function setSeg(n,v){const g=segRoot(n),vs=[].concat(v??[]).map(String);$$('button',g).forEach(b=>b.classList.toggle('on',vs.includes(b.textContent)));othVis(n)}
-function othVis(n){const i=$(`#f .oth[data-o=${n}]`);if(i)i.classList.toggle('hide',!getSeg(n).includes('Other'))}
+function othVis(n){const i=$(`#f .oth[data-o=${n}]`);if(i)i.classList.toggle('hide',![].concat(getSeg(n)).some(v=>/^other$/i.test(v)))}
 $('#f').addEventListener('click',e=>{const b=e.target.closest('.seg[data-n] button');if(!b)return;const g=b.parentNode,n=g.dataset.n;
  if(g.classList.contains('multi')){b.classList.toggle('on');if(n=='concerns'&&b.textContent=='None'&&b.classList.contains('on'))$$('button',g).forEach(x=>x!==b&&x.classList.remove('on'));else if(n=='concerns')$$('button',g).find(x=>x.textContent=='None').classList.remove('on')}
  else{const on=b.classList.contains('on');$$('button',g).forEach(x=>x.classList.remove('on'));if(!(on&&['rating','excite','went','paid','expPaid'].includes(n)))b.classList.add('on')}
@@ -248,15 +248,15 @@ f.met.onchange=()=>f.otherDetail.classList.toggle('hide',f.met.value!='Other');
 f.onsubmit=e=>{e.preventDefault();const nick=f.nick.value.trim().slice(0,12);if(!nick){toast('Add a nickname or initials');return}if(!f.date.value){toast('Pick a date');return}
  const r={date:f.date.value,time:f.time.value,nick,met:f.met.value,otherDetail:f.met.value=='Other'?f.otherDetail.value.trim():'',where:f.where.value.trim(),type:getSeg('type'),excite:+getSeg('excite')||null,expPaid:getSeg('expPaid'),hoping:getSeg('hoping'),concerns:getSeg('concerns'),draw:[],drawOther:'',why:[],whyOther:'',they:[],theyOther:'',concernOther:'',concernsRight:{}};
  if(!r.type){toast('Pick a date type');return}
- const ov=k=>{const i=$(`#f .oth[data-o=${k}]`);return getSeg(k).includes('Other')?i.value.trim():''};
- if(!$('#drawBox').classList.contains('hide')){r.draw=getSeg('draw');r.drawOther=ov('draw')}r.concernOther=ov('concerns');
+ const ov=k=>{const i=$(`#f .oth[data-o=${k}]`);return [].concat(getSeg(k)).some(v=>/^other$/i.test(v))?i.value.trim():''};
+ if(!$('#drawBox').classList.contains('hide')){r.draw=getSeg('draw');r.drawOther=ov('draw')}r.concernOther=ov('concerns');r.typeOther=ov('type');
  const post=mode!='pre';if(post){Object.assign(r,{status:'done',went:+getSeg('went')||null,mine:getSeg('mine'),theirs:getSeg('theirs'),second:getSeg('second'),rating:+getSeg('rating')||null,note:f.note.value.trim(),cats:getCats(),spend:parseSpend(f.spend.value),paid:getSeg('paid')});
   if(f.spend.value.trim()&&r.spend==null){toast('Spend should be a number like 42.50');return}
   if(!r.mine){toast('Would you see them again?');return}if(!r.theirs)r.theirs='unknown';if(!r.second)r.second='not yet';
   if(showWhy(r.mine)){r.why=getSeg('why');r.whyOther=ov('why')}if(showThey(r.mine,r.theirs,r.second)){r.they=getSeg('they');r.theyOther=ov('they')}
   $$('#crRows .cr').forEach(x=>{const on=$('.on',x);if(on)r.concernsRight[x.dataset.c]=on.textContent})}
  else Object.assign(r,{status:'upcoming',cats:{},spend:null,paid:null,went:null,mine:null,theirs:null,second:null,rating:null,note:''});
- if(BAD.test([r.nick,r.note,r.where,r.otherDetail,r.drawOther,r.whyOther,r.theyOther,r.concernOther].join(' '))){toast('No contact info please');return}
+ if(BAD.test([r.nick,r.note,r.where,r.otherDetail,r.drawOther,r.typeOther,r.whyOther,r.theyOther,r.concernOther].join(' '))){toast('No contact info please');return}
  const sid=editId||Date.now();try{shot?localStorage.setItem(SK+sid,shot):localStorage.removeItem(SK+sid)}catch(e){toast('Screenshot too big to store')}
  if(editId){const d=D.dates.find(x=>x.id==editId);Object.assign(d,r)}else{const p=findP(nick);if(p&&p.last)p.last.second='yes';D.dates.push({id:sid,...r})}
  const was=mode,aa=askAfter&&r.status=='upcoming';askAfter=false;normalize();save();mode=was=='review'?'post':was;resetForm();toast(was=='pre'?'Upcoming date saved ✓':'Saved ✓');render();
