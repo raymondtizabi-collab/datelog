@@ -122,7 +122,7 @@ details.ws{margin-top:8px;font-size:13px;color:var(--mu)}details.ws summary{curs
  <div class="card hs" style="text-align:center"><h2>🔒 Private by default.<br>Share only if you want to.</h2><p class="muted">Your logs, notes and screenshots stay on this device. Friend links, share cards and the optional pooled stats send only what each one lists under “Exactly what gets shared?”.</p><button class="btn" id="homeGo2" type="button">Log a date →</button></div>
 </section>
 <section id="v-log">
- <div id="recap"></div><div id="nudges"></div>
+ <div id="recap"></div><div id="bfLog"></div><div id="nudges"></div>
  <div class="card" id="formCard"><div class="row" style="justify-content:space-between"><h2 id="fTitle" style="margin:0">Log a date</h2><button type="button" class="btn g hide" id="cancelEdit" style="padding:6px 12px">Cancel</button></div>
  <div class="seg" id="modeSeg" style="margin:12px 0"><button type="button" data-m="post" class="on">✍️ Already happened</button><button type="button" data-m="pre">📅 Upcoming date</button></div>
  <p class="muted" id="fHelp">Nickname or initials only. No full names, photos or contact info.</p>
@@ -294,10 +294,12 @@ f.onsubmit=e=>{e.preventDefault();const nick=f.nick.value.trim().slice(0,12);if(
   $$('#crRows .cr').forEach(x=>{const on=$('.on',x);if(on)r.concernsRight[x.dataset.c]=on.textContent})}
  else Object.assign(r,{status:'upcoming',cats:{},spend:null,paid:null,went:null,mine:null,theirs:null,second:null,rating:null,note:''});
  if(BAD.test([r.nick,r.note,r.where,r.otherDetail,r.drawOther,r.typeOther,r.whyOther,r.theyOther,r.concernOther].join(' '))){toast('No contact info please');return}
- const sid=editId||Date.now();try{shot?localStorage.setItem(SK+sid,shot):localStorage.removeItem(SK+sid)}catch(e){toast('Screenshot too big to store')}
+ const wasUp=!!editId&&(D.dates.find(x=>x.id==editId)||{}).status=='upcoming',sid=editId||Date.now();try{shot?localStorage.setItem(SK+sid,shot):localStorage.removeItem(SK+sid)}catch(e){toast('Screenshot too big to store')}
  if(editId){const d=D.dates.find(x=>x.id==editId);Object.assign(d,r)}else{const p=findP(nick);if(p&&p.last)p.last.second='yes';D.dates.push({id:sid,...r})}
  const was=mode,aa=askAfter&&r.status=='upcoming';askAfter=false;normalize();save();mode=was=='review'?'post':was;resetForm();toast(was=='pre'?'Upcoming date saved ✓':'Saved ✓');render();
-poolSync();
+poolSync();const sd=D.dates.find(x=>x.id==sid);
+ if(sd&&sd.status=='done'&&wasUp&&(sd.preds||[]).length){location.hash='#verdict='+sid;toast('🔮 The verdict is in!');return}
+ if(!aa)showRecap(sid);
  if(aa)setTimeout(()=>{const b=$(`.ask[data-id="${sid}"]`);if(b){b.scrollIntoView({block:'center'});b.click()}},50)};
 $('#saveAsk').onclick=()=>{askAfter=true;f.requestSubmit?f.requestSubmit():$('#saveBtn').click()};
 function demo(){const T=OPT.type,A=['Hinge','Hinge','Bumble','Tinder','In person','Raya','Set up','At work'];
@@ -480,7 +482,22 @@ function route(){let h=(location.hash||(D.dates.length?'#log':'#home')).slice(1)
  if(v=='callit')friendView(dec(arg));if(v=='verdict')verdict(arg);if(!['home','log','dash','compare','card','callit','verdict'].includes(v))v='log';
  const sec={callit:'friend',verdict:'verdict'}[v]||v;['home','log','dash','compare','card','friend','verdict'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=sec));$('nav').classList.toggle('hide',v=='callit');$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v));if(['log','card','dash','verdict'].includes(v))syncGuesses();if(v=='compare')loadPooled();if(window._sec!==sec){if(window._sec)scrollTo(0,0);window._sec=sec}$('#askBox').classList.add('hide')}
 $('#meName').value=D.me||'';$('#meName').onchange=e=>{D.me=e.target.value.trim().slice(0,20);save();toast('Saved')};
-function heroUpd(){$('#heroGo').textContent=D.dates.length?'Log a date →':'Log your first date →';
+const realDone=()=>D.dates.filter(d=>!d.demo&&d.status=='done');
+function recap3(){const ds=realDone().slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);if(ds.length<3)return'';const w=ds.filter(d=>d.went),good=ds.filter(d=>d.went>=4).length,again=ds.filter(d=>d.mine=='yes').length,y2=ds.filter(d=>d.second=='yes').length,ty=[...new Set(ds.map(d=>d.type))];
+ return`<div class="tile" style="margin-top:8px;background:#1f232c;border-radius:12px;padding:12px"><b>🎉 Your first 3-date recap</b><ul style="margin:6px 0 0;padding-left:18px;line-height:1.5"><li>${ds.map(d=>esc(d.nick)).join(', ')} · ${ty.map(esc).join(', ')}</li>${w.length?`<li>Average date: ${f1(avg(w.map(d=>d.went)))}/5 · ${good} of ${ds.length} were 4–5★</li>`:''}<li>You wanted to see ${again} of ${ds.length} again${y2?` · ${y2} became a 2nd date`:''}</li></ul><small class="muted">Just a recap of what you logged — patterns get more reliable as you add more dates.</small></div>`}
+function showRecap(id){const d=D.dates.find(x=>x.id==id),el=$('#recap');if(!d){el.innerHTML='';return}people(true);const n=realDone().length,up=d.status=='upcoming',T=d.type?d.type[0].toUpperCase()+d.type.slice(1):'Date';
+ const chips=(up?[d.met&&'met via '+d.met,d.excite&&'excitement '+d.excite+'/5',(d.hoping||[]).length&&'hoping: '+d.hoping.join(', '),dayWord(d.date)]:[d.went&&'★'.repeat(d.went)+' '+d.went+'/5',d.mine&&'see again: '+d.mine,d.second&&'2nd date: '+d.second,d.met&&'via '+d.met]).filter(Boolean);
+ el.innerHTML=`<div class="card recap"><div class="row" style="justify-content:space-between"><span class="eyebrow" style="color:var(--ok)">✓ Saved</span><button class="btn g" id="recapX" type="button" style="min-height:0;padding:4px 10px">✕</button></div><div class="big2">${up?'📅':'💌'} ${esc(T)} with ${esc(d.nick)}${d._n>1?` · date #${d._n}`:''}</div><div class="chips">${chips.map(c=>`<span>${esc(c)}</span>`).join('')}</div>
+ ${up?`<p style="margin:12px 0 0">Your friends can call it right now — no history needed, no account for them.</p><button class="btn big ask" data-id="${d.id}" type="button">🔮 Send to friends to call it</button><button class="lnk" id="recapMore" type="button">Log another date</button>`
+ :n==3?recap3()+`<div class="row" style="margin-top:12px"><a class="btn" href="#dash" style="text-decoration:none;display:inline-flex;align-items:center">See your stats →</a><button class="btn g" id="recapMore" type="button">Log another</button></div>`
+ :n<3?`<p style="margin:12px 0 4px">${3-n} more past date${3-n>1?'s':''} until your first 3-date recap.</p><div class="prog"><i style="width:${100*n/3}%"></i></div><button class="btn big" id="recapMore" type="button">Log another past date</button>`
+ :`<div class="row" style="margin-top:12px"><button class="btn" id="recapMore" type="button">Log another</button><a class="btn g" href="#dash" style="text-decoration:none;display:inline-flex;align-items:center">See your insights</a></div>`}</div>`;
+ $('#recapX').onclick=()=>el.innerHTML='';$('#recapMore').onclick=()=>{el.innerHTML='';goLog(up?'pre':'post')};el.scrollIntoView({block:'start'});scrollBy(0,-70)}
+function bfHtml(where){const n=realDone().length;if(n>=3||D.bfx||(where=='log'&&$('#recap').innerHTML))return'';
+ return`<div class="card nud"><div class="row" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><b style="font-size:16px">🕰️ Remember your last three dates?</b><button class="btn g bfx" type="button" style="min-height:0;padding:3px 9px" aria-label="Dismiss">✕</button></div><p style="margin:6px 0">Add them in a couple of minutes and start seeing your dating story.</p><div class="prog"><i style="width:${100*n/3}%"></i></div><small class="muted">${n} of 3 · your first 3-date recap unlocks at 3</small><button class="btn big bf" type="button">Add a past date</button></div>`}
+document.addEventListener('click',e=>{if(e.target.closest('.bf'))goLog('post');else if(e.target.closest('.bfx')){D.bfx=1;save();render()}});
+function heroUpd(){$('#homeNudge').innerHTML=bfHtml('home');$('#bfLog').innerHTML=bfHtml('log');{const n=realDone().length;$('#ms3').innerHTML=n>=3&&n<8?`<div class="card">${recap3()}</div>`:''}
+$('#heroGo').textContent=D.dates.length?'Log a date →':'Log your first date →';
  const b=$('#bkNote');if(b){const L=D.lastBackup;b.classList.toggle('hide',!D.dates.some(d=>!d.demo)||!!(L&&Date.now()-L<30*864e5));$('#bkLast').textContent=L?new Date(L).toLocaleDateString():'never'}}
 const goLog=m=>{location.hash='#log';mode=m;resetForm();setTimeout(()=>{$('#formCard').scrollIntoView({block:'start'});scrollBy(0,-70);f.nick.focus({preventScroll:true})},120)};
 $('#heroGo').onclick=$('#homeGo2').onclick=()=>goLog('post');$('#homeAsk').onclick=()=>goLog('pre');
