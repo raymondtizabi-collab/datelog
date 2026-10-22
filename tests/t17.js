@@ -2,9 +2,9 @@
 const {run,U,S,IMG}=require('./lib');const G=[];
 run(async({p,pg,ok,noX})=>{
 await p.goto(U+'#home');await p.reload();await p.waitForTimeout(300);
-const h=await p.innerText('#hero');ok(h.includes('Your dating life has a story. See what it’s telling you.'),'headline');ok(h.includes('Let your friends predict what happens next'),'subline');ok(/PREVIEW · EXAMPLE/i.test(h)&&h.includes('“The Musician”')&&h.includes('Yes — Sam')&&h.includes('No — Alex'),'preview card labeled');ok(h.includes('Or explore a sample dating history'),'demo link');
+const h=await p.innerText('#hero');ok(h.includes('Your dating life has a story. See what it’s telling you.'),'headline');ok(h.includes('Let your friends predict what happens next'),'subline');const hl=await p.innerText('#homeLive');ok(/PREVIEW · EXAMPLE/i.test(hl)&&hl.includes('“The Musician”')&&hl.includes('Yes — Sam')&&hl.includes('No — Alex'),'fallback preview card labeled');ok(h.includes('Or explore a sample dating history'),'demo link');
 ok(/Log your dates[\s\S]*Discover your patterns[\s\S]*Let your friends call it/.test(await p.innerText('#how'))&&/optional/.test(await p.innerText('#how')),'3-step explainer');
-ok(await p.evaluate(()=>document.querySelector('#hero').nextElementSibling.id=='how'),'explainer directly under hero');
+ok(await p.evaluate(()=>document.querySelector('#hero').nextElementSibling.id=='homeLive'&&document.querySelector('#homeLive').nextElementSibling.id=='how'),'explainer directly under hero');
 ok(/Remember your last three dates\?/.test(await p.innerText('#homeNudge')),'backfill nudge');
 ok(await p.$eval('#heroGo',e=>e.getBoundingClientRect().height)>=46,'big CTA');await noX(p,'home');await p.screenshot({path:S+'review-home.png'});
 await p.click('#homeAsk');await p.waitForTimeout(400);await p.fill('[name=nick]','Musician');await p.click('#f .seg[data-n=type] button:text-is("drinks")');await p.click('#f .seg[data-n=excite] button:text-is("5")');

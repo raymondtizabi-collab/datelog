@@ -1,7 +1,7 @@
 // home page, CTAs, details always open, no hero on log
 const {run,U,S}=require('./lib');run(async({p,ok,noX})=>{
 await p.goto(U);await p.waitForTimeout(300);ok(await p.isVisible('#hero'),'hero visible first time');ok(/stays on your device\. Only what you choose to share leaves it/.test(await p.innerText('#hero')),'privacy line');
-for(const t of ['What actually makes a good date','Expectations vs. reality','Make your friends call it','Sam','Oracle','Way off','13%','Expected split','Share only if you want to','Did you know?'])ok((await p.innerText('#v-home')).includes(t),'home has '+t);
+for(const t of ['What actually makes a good date','Expectations vs. reality','Make your friends call it','Sam','Best caller','Way off','13%','Expected split','Share only if you want to','Did you know?'])ok((await p.innerText('#v-home')).includes(t),'home has '+t);
 await noX(p,'home');await p.screenshot({path:S+'home-1.png'});
 await p.click('#homeAsk');await p.waitForTimeout(400);ok(await p.evaluate(()=>location.hash=='#log'&&mode=='pre'),'ask CTA -> upcoming');
 await p.goto(U+'#home');await p.click('#heroGo');await p.waitForTimeout(700);ok(await p.evaluate(()=>document.activeElement.name)=='nick','scrolls to quick log');
