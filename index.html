@@ -66,6 +66,7 @@ nav a{display:inline-block;padding:10px 2px}nav a.on{padding-bottom:8px}
 .hero h1{font-size:30px;letter-spacing:-.01em}.hero .sub{font-size:16px;line-height:1.45;color:#cfd4dd;margin:0 0 4px}
 .pv{background:linear-gradient(160deg,#2a1748,#1c2028);border-color:#6a4fd0}.pvq{font-size:13px;color:var(--mu);margin-top:6px}.pvb{display:block;font-size:17px;margin:4px 0 8px}
 .pchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}.pchips span{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 11px;font-size:13.5px;font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.two .btn.big{margin-top:0;min-height:72px;font-size:16px;line-height:1.2;padding:12px 10px}.two .alt{background:#3a1a5c;border:1px solid #6a4fd0}@media(max-width:360px){.two{grid-template-columns:1fr}}.hl{border-color:#6a4fd0}.tw .dr>b{white-space:nowrap}
 .lnk{display:block;width:100%;background:none;border:0;color:var(--tx);text-decoration:underline;text-underline-offset:3px;font:inherit;font-size:15px;padding:14px 0 4px;cursor:pointer}
 .pl{margin:10px 0 0;text-align:center}
 .how>div{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}.how>div:first-child{border-top:0}.how b{flex:0 0 30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center}.how strong{display:block}.how span{color:var(--mu);font-size:14px}
@@ -84,32 +85,31 @@ details.ws{margin-top:8px;font-size:13px;color:var(--mu)}details.ws summary{curs
 #friendCard h2{font-size:26px;line-height:1.2;margin:6px 0 8px}.own{margin-top:16px;text-align:center;font-size:14px}.own a{color:var(--tx)}
 .rv{max-width:480px;margin:0 auto}.rv table td,.rv table th{padding:8px 4px}.win{font-size:22px;font-weight:800;margin:6px 0}#vImg,#stImg{width:100%;max-width:360px;max-height:70vh;object-fit:contain;border-radius:18px;display:block;margin:12px auto}
 </style></head><body>
-<header><a href="#home" class="logo" style="color:inherit;text-decoration:none">date<span>log</span></a><nav><a href="#home">Home</a><a href="#log">Log</a><a href="#dash">Stats</a><a href="#oracle">Oracle</a><a href="#compare">Compare</a><a href="#card">Share</a></nav></header>
+<header><a href="#home" class="logo" style="color:inherit;text-decoration:none">date<span>log</span></a><nav><a href="#home">Home</a><a href="#log">Log</a><a href="#dash">Stats</a><a href="#oracle">Crowd</a><a href="#compare">Compare</a><a href="#card">Share</a></nav></header>
 <main>
 <section id="v-home" class="hide">
  <div class="card hero" id="hero"><span class="logo2"><b>♥</b> datelog</span>
  <h1>Your dating life has a story. See what it’s telling you.</h1>
  <p class="sub">Remember your dates. Discover your patterns. Let your friends predict what happens next.</p>
- <div class="mini pv" aria-label="Example preview"><span class="ex">Preview · example</span><div class="pvq">Friday’s date with “The Musician”</div><b class="pvb">Will there be a 2nd date?</b>
-  <div class="pchips"><span>😍 Yes — Sam</span><span>🤔 No — Alex</span><span>😍 Yes — Priya</span></div><small class="muted">2 of 3 friends say yes · reveal after the date</small></div>
- <button class="btn big" id="heroGo" type="button">Log your first date →</button>
+ <div class="two"><button class="btn big" id="heroGo" type="button">📝 Track my dates</button><button class="btn big alt" id="heroOracle" type="button">🔮 Call other people’s dates</button></div>
  <button class="lnk" id="heroDemo" type="button">Or explore a sample dating history</button>
  <p class="muted pl">🔒 Your dating history stays on your device. Only what you choose to share leaves it.</p></div>
+ <div id="homeLive"></div>
  <div class="card" id="how"><h2>How it works</h2>
   <div class="how"><div><b>1</b><div><strong>Log your dates</strong><span>A minute each. Private — saved only on this device.</span></div></div>
   <div><b>2</b><div><strong>Discover your patterns</strong><span>What gets you great dates, and who you click with.</span></div></div>
-  <div><b>3</b><div><strong>Let your friends call it 🔮</strong><span>Send a prediction link before the date, then reveal who guessed right.</span></div></div></div>
+  <div><b>3</b><div><strong>Let your friends call it 🔮</strong><span>Make your own call, see if your friends — and the wisdom of the crowd — know better.</span></div></div></div>
   <p class="muted" style="margin:10px 0 0">Sharing is always optional — steps 1 and 2 never leave your phone.</p></div>
  <div id="homeNudge"></div>
  <div class="card hs fun"><h2 style="font-size:24px">Make your friends call it 🔮</h2><p>Before the date, your friends bet on how it goes. After, the app crowns who knows you best. Works from your very first date — no history needed, and friends don’t need an account.</p>
-  <div class="steps"><div><b>1</b>Share your upcoming date</div><div><b>2</b>Friends lock in guesses</div><div><b>3</b>Reveal the verdict &amp; crown the Oracle</div></div>
+  <div class="steps"><div><b>1</b>Share your upcoming date</div><div><b>2</b>Friends lock in guesses</div><div><b>3</b>Reveal the verdict &amp; crown the best caller</div></div>
   <div class="mini chat"><span class="ex">Example</span>
    <div class="bub me">Call it 🔮 Love story or one-date wonder? I’ve got a date with Thomas Friday. Make your prediction:</div>
    <div class="bub them"><small>Sam</small>😍 Love story. 4/5. They close the bar 🍸</div>
    <div class="bub them"><small>Kai</small>💀 One-date wonder</div>
    <div class="bub me">Verdict’s in 👀</div></div>
   <div class="mini vd"><span class="ex">Example</span><div class="vt">🔮 THE VERDICT</div><div class="vr"><div><b>4/5</b><small>how it went</small></div><div><b>Yes</b><small>2nd date</small></div></div>
-   <div class="lb"><div>🥇 Sam <small>🔮 Oracle</small><b>100%</b></div><div>🥈 Ana <small>👀 Good read</small><b>75%</b></div><div>🥉 Kai <small>🙈 Way off</small><b>13%</b></div></div></div>
+   <div class="lb"><div>🥇 Sam <small>🔮 Best caller</small><b>100%</b></div><div>🥈 Ana <small>👀 Good read</small><b>75%</b></div><div>🥉 Kai <small>🙈 Way off</small><b>13%</b></div></div></div>
   <button class="btn big" id="homeAsk" type="button">Plan a date &amp; ask friends 🔮</button>
   <p class="dyk"><b>Did you know?</b> Friends used to be America’s #1 matchmaker. Among straight couples, meeting through friends fell from 33% (1995) to 20% (2017), while meeting online rose to 39%. <a href="https://www.pnas.org/doi/10.1073/pnas.1908630116" target="_blank" rel="noopener">Rosenfeld, Thomas &amp; Hausen, PNAS 2019</a></p></div>
  <div class="card hs"><h2>What actually makes a good date — for you?</h2><p class="muted">Rate a few dates. See what really moves the needle.</p>
@@ -135,6 +135,7 @@ details.ws{margin-top:8px;font-size:13px;color:var(--mu)}details.ws summary{curs
   <div class="fld"><label>How did you meet?</label><div id="metChips" class="seg"></div><select name="met" class="hide"><option>Hinge</option><option>Bumble</option><option>Tinder</option><option>Raya</option><option>Other app</option><option>In person</option><option>At work</option><option>Set up</option><option>Other</option></select><input name="otherDetail" class="hide" maxlength="40" placeholder="What other? (private)" style="margin-top:6px"></div>
  <div class="fld"><label data-past="What did you do?" data-fut="What are you doing?">What did you do?</label><div class="seg" data-n="type"></div><input data-o="type" class="hide oth" maxlength="40" placeholder="What are you doing? (private)"></div>
 <div class="preOnly"> <div class="fld"><label>How excited are you?</label><div class="seg" data-n="excite"></div></div>
+ <div class="fld"><label>Your call: will there be a 2nd date? <span class="muted" style="font-weight:400">(private — never shown to friends or The Crowd)</span></label><div class="seg" data-n="myCall"></div></div>
 </div>
  <div class="fld postOnly"><label>How was the date? <span class="muted" style="font-weight:400">(overall)</span></label><div class="seg stars" data-n="went"></div></div>
  <div class="fld postOnly"><label>Would you see them again?</label><div class="seg" data-n="mine"></div></div>
@@ -167,7 +168,7 @@ details.ws{margin-top:8px;font-size:13px;color:var(--mu)}details.ws summary{curs
  </div>
  <div id="shotFld" style="margin-top:12px;display:block"><label>Add profile screenshot (optional)</label><label class="btn g" for="shotIn" id="shotBtn" style="display:inline-block;padding:9px 14px">📷 Choose from Photos</label><input type="file" id="shotIn" accept="image/*" class="hide"><div id="shotPrev" class="hide" style="margin-top:8px;position:relative;width:fit-content"><img id="shotImg" alt="Profile screenshot preview" style="max-width:120px;max-height:200px;border-radius:10px;display:block"><button type="button" id="shotRm" class="btn g" style="position:absolute;top:4px;right:4px;padding:2px 8px">✕</button></div><p class="muted" style="font-size:13px;margin:6px 0 0">🔒 Stays on your device. Never sent automatically — when you ask friends to call it, you can tick “include screenshot” for that one share. Never in pooled stats.</p></div>
  </div>
- <div class="preOnly"><div class="fld hide" id="coFld"><label class="optin"><input type="checkbox" id="coPost"><span><b>Also post to Community Oracle (anonymous)</b><br><small class="muted">Strangers in LA vote love story or one-date wonder. You can unpost anytime.</small></span></label>
+ <div class="preOnly"><div class="fld hide" id="coFld"><label class="optin"><input type="checkbox" id="coPost"><span><b>Also ask The Crowd (anonymous)</b><br><small class="muted">Strangers in LA vote love story or one-date wonder. You can unpost anytime.</small></span></label>
  <div id="coOpts" class="hide"><div class="grid fld"><div><label>Public nickname</label><input id="coNick" maxlength="16" placeholder="e.g. The Architect or J.R." autocomplete="off"></div><div><label>Broad area</label><select id="coArea"></select></div></div><div class="copub" id="coPrev"></div></div></div></div>
  <div class="row" style="margin-top:16px"><button class="btn" id="saveBtn">Save upcoming date</button><button class="btn g preOnly" id="saveAsk" type="button">Save &amp; ask friends 🔮</button><span class="muted">Saved only in this browser. Nothing is sent unless you choose to share.</span></div>
  </form></div>
@@ -177,7 +178,7 @@ details.ws{margin-top:8px;font-size:13px;color:var(--mu)}details.ws summary{curs
 <section id="v-dash" class="hide">
  <div class="card fnd"><h2>✨ Your dating insights</h2><div id="findings"></div><p class="muted" style="font-size:12px;margin:8px 0 0">Calculated on your device from your own logs. Each insight shows how many dates it’s based on; small samples are early patterns, not truths.</p></div>
  <div class="card"><h2>💬 Ask your data</h2><div class="qchips" id="qchips"></div><div class="chat" id="askLog"></div><form id="askF" class="row" style="margin-top:10px;flex-wrap:nowrap"><input id="askQ" placeholder="e.g. Am I too optimistic?" autocomplete="off" enterkeyhint="send" style="flex:1"><button class="btn" type="submit">Ask</button></form></div>
- <div id="ms3"></div>
+ <div id="ms3"></div><div id="whoBest"></div>
  <div class="card nud hide" id="bkNote"><b>💾 Back up your data</b><p class="muted" style="margin:6px 0">Your dates live only in this browser. Export a backup file now and then (last: <span id="bkLast">never</span>).</p><button class="btn" type="button" onclick="exportData()">Export backup</button></div>
  <div class="card hide" id="empty"><h2>Your stats will live here 📊</h2><p class="muted">They appear once you’ve logged a date that already happened. Want to see what it looks like first?</p><button class="btn big" id="demo2" type="button">See it with sample data</button><p class="muted" style="margin:10px 0 0">Or <a href="#log" style="color:var(--ac)">log a past date</a>. Sample data is clearly marked DEMO and can be switched off anytime.</p></div>
  <div id="dashBody">
@@ -221,13 +222,15 @@ details.ws{margin-top:8px;font-size:13px;color:var(--mu)}details.ws summary{curs
 <div id="askBox" class="card hide" style="position:fixed;left:12px;right:12px;bottom:12px;z-index:5;max-width:560px;margin:auto;box-shadow:0 10px 40px #000;max-height:82vh;overflow-y:auto"></div>
 </main>
 <script>
+const HL_PREVIEW=`<div class="card" id="hlPrev"><div class="mini pv" aria-label="Example preview"><span class="ex">Preview · example</span><div class="pvq">Friday’s date with “The Musician”</div><b class="pvb">Will there be a 2nd date?</b>
+  <div class="pchips"><span>😍 Yes — Sam</span><span>🤔 No — Alex</span><span>😍 Yes — Priya</span></div><small class="muted">2 of 3 friends say yes · reveal after the date</small></div><button class="btn big" id="hlCta" type="button">Got a date? Let the crowd call it</button></div>`;
 const CATS=[['looks','Looks/attraction'],['personality','Personality'],['conversation','Conversation'],['humor','Humor'],['chemistry','Chemistry'],['values','Shared values']],CL=Object.fromEntries(CATS);
 const cleanCats=c=>{const o={};CATS.forEach(([k])=>{const v=+(c||{})[k];if(v>=1&&v<=5)o[k]=Math.round(v)});return o};// numbers only
 const OPT={expPaid:['I will','They will','Split','Not sure'],paid:['I paid','They paid','Split','Not sure'],type:['coffee','drinks','dinner','activity','other'],excite:['1','2','3','4','5'],went:['1','2','3','4','5'],rating:['1','2','3','4','5'],
  draw:['Looks','Banter/chat','Their profile','Shared interests','Mutual friends','Vibe in person','Not sure','Other'],
  hoping:['Fun night','Chemistry check','Relationship potential','Just casual','Not sure'],
  concerns:['Looks different than photos','Nothing to talk about','Red flag from chat','Safety','They\'re not serious','Too nervous','None','Other'],
- mine:['yes','maybe','no'],theirs:['yes','unknown','no'],second:['not yet','yes','no'],
+ myCall:['😍 Love story','💀 One-date wonder'],mine:['yes','maybe','no'],theirs:['yes','unknown','no'],second:['not yet','yes','no'],
  why:['No chemistry','Not physically attracted','Conversation fell flat','Different goals or values','Looked different than photos','Red flag','Too far / bad timing','Into someone else','Other'],
  they:['No chemistry','Not their type','I was too nervous / off night','Different goals',"They're seeing someone else",'Bad timing','They ghosted / no idea','Other']};
 const OTH={type:'typeOther',draw:'drawOther',concerns:'concernOther',why:'whyOther',they:'theyOther'};
@@ -293,7 +296,7 @@ $('#cancelEdit').onclick=()=>{mode='post';resetForm()};
 f.nick.oninput=()=>{if(editId)return upd();const p=findP(f.nick.value);$('#nickHint').textContent=p?'↪ Date #'+(p.all.length+1)+' with '+p.nick+' · how you met carried over':'';$('#secLbl').textContent=p?'Saw them again after this?':'2nd date happened?';if(p){f.met.value=p.met;f.otherDetail.value=p.od||'';f.met.onchange()}upd()};
 f.met.onchange=()=>f.otherDetail.classList.toggle('hide',f.met.value!='Other');
 f.onsubmit=e=>{e.preventDefault();const nick=f.nick.value.trim().slice(0,12);if(!nick){toast('Add a nickname or initials');return}if(!f.date.value){toast('Pick a date');return}
- const r={date:f.date.value,time:f.time.value,nick,met:f.met.value,otherDetail:f.met.value=='Other'?f.otherDetail.value.trim():'',where:f.where.value.trim(),type:getSeg('type'),excite:+getSeg('excite')||null,expPaid:getSeg('expPaid'),hoping:getSeg('hoping'),concerns:getSeg('concerns'),draw:[],drawOther:'',why:[],whyOther:'',they:[],theyOther:'',concernOther:'',concernsRight:{}};
+ const r={myCall:getSeg('myCall'),date:f.date.value,time:f.time.value,nick,met:f.met.value,otherDetail:f.met.value=='Other'?f.otherDetail.value.trim():'',where:f.where.value.trim(),type:getSeg('type'),excite:+getSeg('excite')||null,expPaid:getSeg('expPaid'),hoping:getSeg('hoping'),concerns:getSeg('concerns'),draw:[],drawOther:'',why:[],whyOther:'',they:[],theyOther:'',concernOther:'',concernsRight:{}};
  if(!r.type){toast('Pick a date type');return}
  const ov=k=>{const i=$(`#f .oth[data-o=${k}]`);return [].concat(getSeg(k)).some(v=>/^other$/i.test(v))?i.value.trim():''};
  if(!$('#drawBox').classList.contains('hide')){r.draw=getSeg('draw');r.drawOther=ov('draw')}r.concernOther=ov('concerns');r.typeOther=ov('type');
@@ -337,7 +340,7 @@ const INP=['In person','At work','Set up'];const chan=d=>INP.includes(d.met)?'In
 const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length):null,f1=x=>x==null?'–':x.toFixed(1);
 function stats(){const P=people(),n=P.length,done=D.dates.filter(d=>d.status!='upcoming'),res=P.filter(p=>p.resolved).length,sec=P.filter(p=>p.reached2).length,r3=P.filter(p=>p.reached3).length,want=P.filter(p=>p.first.mine=='yes').length,mut=P.filter(p=>p.first.mine=='yes'&&p.first.theirs=='yes').length,rt=done.filter(d=>d.rating);
  const bt=group(d=>d.type).filter(r=>r[2]>=2).sort((a,b)=>b[1]/b[2]-a[1]/a[2]);return{P,n,done,total:done.length,sec,dec:res,pend:n-res,r3,want,mut,avg:rt.length?f1(avg(rt.map(d=>d.rating))):'–',best:bt[0]?bt[0][0]:'–'}}
-function render(){normalize();heroUpd();renderFindings();const s=stats(),all=D.dates,ds=s.done;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
+function render(){normalize();heroUpd();whoBest();renderFindings();const s=stats(),all=D.dates,ds=s.done;$('#empty').classList.toggle('hide',ds.length>0);$('#dashBody').classList.toggle('hide',!ds.length);
  const PA=people(true);$('#nicks').innerHTML=PA.map(p=>`<option value="${esc(p.nick)}">`).join('');
  // nudges
  const dueL=all.filter(due).sort((a,b)=>a.date.localeCompare(b.date)),old=s.P.filter(p=>p.last.second=='not yet'&&!p.up.length&&(Date.now()-new Date(p.last.date))/864e5>14).sort((a,b)=>a.last.date.localeCompare(b.last.date))[0];
@@ -464,11 +467,24 @@ function scorePred(d,p){const parts=[],L=[];
  let err=null;if(d.went&&p.pw){err=Math.abs(p.pw-d.went);parts.push(1-err/4);L.push(`said ${p.pw}, it was ${d.went}: ${err?'off by '+err:'spot on 🎯'}`)}
  const m=actMore(d);if(m&&p.pm){const r=p.pm==m;parts.push(r?1:0);L.push(`said ${p.pm} would want it more, it was ${m}: ${r?'right ✅':'wrong ❌'}`)}
  return{acc:parts.length?parts.reduce((a,b)=>a+b,0)/parts.length:null,err,hit:(d.second=='yes'||d.second=='no')?(p.p2==d.second):null,lines:L}}
-const tier=a=>a>=.85?'🔮 Oracle':a>=.65?'👀 Good read':a>=.4?'🪙 Coin flip':'🙈 Way off';
+const tier=a=>a>=.85?'🔮 Best caller':a>=.65?'👀 Good read':a>=.4?'🪙 Coin flip':'🙈 Way off';
 function leaderboard(){const L={};D.dates.filter(d=>d.status=='done').forEach(d=>(d.preds||[]).forEach(p=>{const s=scorePred(d,p);if(s.acc==null)return;const k=p.f.toLowerCase();const o=L[k]=L[k]||{f:p.f,accs:[],errs:[],hits:[]};o.accs.push(s.acc);if(s.err!=null)o.errs.push(s.err);if(s.hit!=null)o.hits.push(s.hit)}));
  return Object.values(L).map(o=>({f:o.f,n:o.accs.length,acc:avg(o.accs),miss:o.errs.length?avg(o.errs):null,hit:o.hits.length?o.hits.filter(Boolean).length/o.hits.length:null,ranked:o.accs.length>=2})).sort((a,b)=>(b.ranked-a.ranked)||b.acc-a.acc||b.n-a.n)}
 const P100=x=>x==null?'–':Math.round(100*x)+'%';
 const lbHtml=()=>{const l=leaderboard();let r=0;return l.length?'<table><tr><th>#</th><th>Friend</th><th>Accuracy</th><th>Calls</th><th>Avg miss</th><th>2nd-date hits</th></tr>'+l.map(x=>`<tr><td>${x.ranked?['🥇','🥈','🥉'][r]||(r+1):'·'}${x.ranked?(r++,''):''}</td><td><b>${esc(x.f)}</b><br><small class="muted">${x.ranked?tier(x.acc):'new · needs 2 calls'}</small></td><td><b>${P100(x.acc)}</b></td><td>${x.n}</td><td>${x.miss==null?'–':x.miss.toFixed(1)+' pts'}</td><td>${P100(x.hit)}</td></tr>`).join('')+'</table>':'<p class="muted">No scored predictions yet. Ask friends to call an upcoming date.</p>'};
+const mcv=d=>/Love/.test(d.myCall||'')?'yes':/One-date/.test(d.myCall||'')?'no':null;
+const crowdOf=d=>d.co&&((d.co.yes||0)+(d.co.no||0))?{y:d.co.yes||0,n:d.co.no||0}:null;
+function threeWay(d){if(d.second!='yes'&&d.second!='no')return null;const rows=[],O=d.second;let you=null,fr=null,cw=null;
+ const mc=mcv(d);if(mc){you=mc==O;rows.push({who:'🙋 You',said:mc=='yes'?'said love story':'said one-date wonder',r:you})}
+ const ps=(d.preds||[]).filter(p=>p.p2);if(ps.length){const y=ps.filter(p=>p.p2=='yes').length,n=ps.length-y;fr=y==n?null:(y>n)==(O=='yes');rows.push({who:'👯 Friends',said:`${y} of ${ps.length} said love story`,r:fr})}
+ const c=crowdOf(d);if(c){cw=c.y==c.n?null:(c.y>c.n)==(O=='yes');rows.push({who:'🌍 The Crowd',said:`${pct(c.y,c.y+c.n)}% said love story`,r:cw})}
+ if(rows.length<2)return null;const T=[you,fr,cw].filter(x=>x!=null);
+ const head=T.length&&T.every(x=>x)?'Everyone called it 🎯':T.length&&T.every(x=>!x)?'Nobody saw this coming 🙈':you===false&&fr===true?'Your friends knew you better than you did 👯':you===true&&fr===false?'You knew yourself better than your friends did 🙋':you===true&&cw===false?'You called it, the crowd didn’t 🙋':you===false&&cw===true?'The crowd saw it coming — you didn’t 🌍':fr===true&&cw===false?'Your friends beat the crowd 👯':cw===true&&fr===false?'The crowd beat your friends 🌍':'Split decision 🤷';
+ return{head,rows,you,fr,cw}}
+function whoBest(){const ds=D.dates.filter(d=>d.status=='done'&&(d.second=='yes'||d.second=='no'));const A={you:[0,0],fr:[0,0],cw:[0,0]};let N=0;
+ ds.forEach(d=>{let any=false;const mc=mcv(d);if(mc){A.you[1]++;if(mc==d.second)A.you[0]++;any=true}(d.preds||[]).filter(p=>p.p2).forEach(p=>{A.fr[1]++;if(p.p2==d.second)A.fr[0]++;any=true});const c=crowdOf(d);if(c&&c.y!=c.n){A.cw[1]++;if((c.y>c.n)==(d.second=='yes'))A.cw[0]++;any=true}if(any)N++});
+ const rows=[['🙋 You (your own call)',A.you,'dates'],['👯 Friends (all their calls)',A.fr,'calls'],['🌍 The Crowd (majority)',A.cw,'dates']].filter(r=>r[1][1]);
+ $('#whoBest').innerHTML=N>=2&&rows.length?`<div class="card"><h2>🏆 Who calls it best?</h2>${rows.map(([l,[a,b],u])=>`<div class="bar"><span class="l" style="width:150px">${l}</span><span class="t"><span class="f" style="width:${pct(a,b)}%;display:block"></span></span><span class="v">${pct(a,b)}%<small class="muted"> ${a}/${b}</small></span></div>`).join('')}<p class="muted" style="font-size:12px;margin:6px 0 0">2nd-date calls only · based on ${N} dates${N<EARLY?' so far — early pattern':''}.</p></div>`:''}
 function verdict(id){const d=D.dates.find(x=>String(x.id)==String(id));const el=$('#verdictCard');$('#vImg').classList.add('hide');VS=null;if(!d||d.status!='done'){VROWS=null;el.innerHTML=`<h2>Verdict not ready</h2><p>Record how the date went first — then the reveal unlocks.</p>`;return}
  people(true);const ps=d.preds||[],m=actMore(d),aw=ps.some(p=>p.pw)?avg(ps.filter(p=>p.pw).map(p=>p.pw)):null,y2=ps.filter(p=>p.p2=='yes').length,sc=ps.map(p=>({p,s:scorePred(d,p)})),mx=Math.max(-1,...sc.map(x=>x.s.acc??-1)),W=mx>=.4?sc.filter(x=>x.s.acc==mx).map(x=>x.p.f):[];
  const sec=d.second=='yes'?'Yes 💞':d.second=='no'?'No':'Not decided yet',secT=d.second=='yes'?'yes':d.second=='no'?'no':'not decided yet',win=!ps.length?'':W.length?`🏆 ${W.map(esc).join(' & ')} called it!`:'🙈 Nobody saw this one coming';
@@ -479,8 +495,9 @@ function verdict(id){const d=D.dates.find(x=>String(x.id)==String(id));const el=
  <h3 style="margin-top:12px">Friends leaderboard</h3>${(()=>{const l=leaderboard().filter(x=>x.ranked).slice(0,3);return l.length?l.map((x,i)=>`<div class="dr"><span>${['🥇','🥈','🥉'][i]} ${esc(x.f)} <small class="muted">${tier(x.acc)}</small></span><span>${P100(x.acc)}</span></div>`).join(''):'<p class="muted" style="font-size:13px">Ranks start after 2 calls per friend.</p>'})()}`;
  const fr=sc.slice(0,4).map(({p,s})=>`${p.f} ${P100(s.acc)}`).join(' · ');
  VROWS=null;const coP=d.co;
- const cr=coP&&(coP.yes||coP.no)?{y:coP.yes||0,n:coP.no||0}:null;if(cr)el.insertAdjacentHTML('beforeend',`<h3 style="margin-top:12px">Friends vs strangers</h3><div class="split"><div><b>${y2}/${ps.length}</b><small>friends said love story</small></div><div><b>${cr.y}/${cr.y+cr.n}</b><small>Community Oracle said love story</small></div></div><p class="ln">${d.second=='yes'||d.second=='no'?(((cr.y>cr.n)==(d.second=='yes'))&&cr.y!=cr.n?'🌍 The crowd called it ✅':cr.y==cr.n?'🌍 The crowd was split':'🌍 The crowd got it wrong ❌'):''}</p>`);
- VS=prepShare(`🔮 The verdict is in! My date with ${d.nick}: it went ${d.went||'?'}/5, 2nd date: ${secT}. ${W.length?W.join(' & ')+' called it.':ps.length?'Nobody called it.':''} Who knows me best?`.replace(/\s+/g,' '),APP,null,{rows:[{t:'🔮 THE VERDICT',s:40,w:800,a:.85},{t:(ME()?ME()+'’s':'My')+' date with '+d.nick,s:68,w:800,gap:24,max:3},{t:`It went ${d.went||'–'}/5 · 2nd date: ${secT}`,s:44,w:700,gap:34,pill:1,max:2},{t:W.length?`🏆 ${W.join(' & ')} called it`:ps.length?'🙈 Nobody called it':'',s:54,w:800,gap:44,max:2},{t:fr,s:34,a:.9,gap:22,max:3},...(cr?[{t:`🌍 Strangers: ${cr.y} love story · ${cr.n} one-date wonder`,s:32,a:.85,gap:16,max:2}]:[])],foot:'Datelog · who knows you best?'},'verdict.jpg');VROWS={text:VS.text,rows:VS._rows};vFmtSet(VF);
+ const cr=coP&&(coP.yes||coP.no)?{y:coP.yes||0,n:coP.no||0}:null;if(cr)el.insertAdjacentHTML('beforeend',`<h3 style="margin-top:12px">Friends vs The Crowd</h3><div class="split"><div><b>${y2}/${ps.length}</b><small>friends said love story</small></div><div><b>${cr.y}/${cr.y+cr.n}</b><small>The Crowd said love story</small></div></div><p class="ln">${d.second=='yes'||d.second=='no'?(((cr.y>cr.n)==(d.second=='yes'))&&cr.y!=cr.n?'🌍 The crowd called it ✅':cr.y==cr.n?'🌍 The crowd was split':'🌍 The crowd got it wrong ❌'):''}</p>`);
+ const TW=threeWay(d);if(TW)el.querySelector('.kpis').insertAdjacentHTML('afterend',`<div class="tw card" style="margin:12px 0 0;background:#1f232c"><h3 style="margin:0 0 6px">You vs Friends vs The Crowd</h3><div class="win" style="font-size:18px">${esc(TW.head)}</div>${TW.rows.map(x=>`<div class="dr"><span><b>${x.who}</b> <span class="muted">${esc(x.said)}</span></span><b>${x.r==null?'🤷 split':x.r?'✅ right':'❌ wrong'}</b></div>`).join('')}</div>`);
+ VS=prepShare(`🔮 The verdict is in! My date with ${d.nick}: it went ${d.went||'?'}/5, 2nd date: ${secT}. ${W.length?W.join(' & ')+' called it.':ps.length?'Nobody called it.':''} Who knows me best?`.replace(/\s+/g,' '),APP,null,{rows:[{t:'🔮 THE VERDICT',s:40,w:800,a:.85},{t:(ME()?ME()+'’s':'My')+' date with '+d.nick,s:68,w:800,gap:24,max:3},{t:`It went ${d.went||'–'}/5 · 2nd date: ${secT}`,s:44,w:700,gap:34,pill:1,max:2},{t:W.length?`🏆 ${W.join(' & ')} called it`:ps.length?'🙈 Nobody called it':'',s:54,w:800,gap:44,max:2},{t:fr,s:34,a:.9,gap:22,max:3},...(TW?[{t:TW.head,s:40,w:800,gap:28,max:2},{t:TW.rows.map(x=>`${x.who} ${x.r==null?'🤷':x.r?'✅':'❌'}`).join(' · '),s:36,gap:12,pill:1,max:2}]:[]),...(cr?[{t:`🌍 The Crowd: ${cr.y} love story · ${cr.n} one-date wonder`,s:32,a:.85,gap:16,max:2}]:[])],foot:'Datelog · who knows you best?'},'verdict.jpg');VROWS={text:VS.text,rows:VS._rows};vFmtSet(VF);
  }
 let VROWS=null,VF='sq';function vFmtSet(fm){VF=fm;$$('#vFmt button').forEach(b=>b.classList.toggle('on',b.dataset.f==fm));if(!VROWS)return;VS=prepShare(VROWS.text,APP,null,{...VROWS.rows,h:fm=='st'?1920:0},fm=='st'?'verdict-story.jpg':'verdict.jpg');previewImg(VS,'#vImg')}
 function previewImg(sh,sel){sh.card.then(f=>{if(!f)return;const im=$(sel);if(im.src)URL.revokeObjectURL(im.src);im.src=URL.createObjectURL(f);im.classList.remove('hide')})}
@@ -502,7 +519,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.ask');if(!b)ret
  const cb=$('#incShot');if(cb)cb.onchange=()=>{SH.files=SH.files.filter(f=>f.name!='profile.jpg');SH.shot=false;if(cb.checked&&shf){SH.files.unshift(shf);SH.shot=true}}});
 function route(){let h=(location.hash||(D.dates.length?'#log':'#home')).slice(1),v=h,arg='';const i=h.indexOf('=');if(i>0){v=h.slice(0,i);arg=h.slice(i+1)}
  if(v=='reply'){importReply(dec(arg));history.replaceState(null,'','#log');v='log'}
- if(v=='callit')friendView(dec(arg));if(v=='verdict')verdict(arg);if(v=='oracle')coLoad(true);if(['log','verdict'].includes(v)){coLoad();coResolve()}if(!['home','log','dash','oracle','compare','card','callit','verdict'].includes(v))v='log';
+ if(v=='callit')friendView(dec(arg));if(v=='verdict')verdict(arg);if(v=='oracle')coLoad(true);if(v=='home'){homeRender();coLoad(true)}if(['log','verdict'].includes(v)){coLoad();coResolve()}if(!['home','log','dash','oracle','compare','card','callit','verdict'].includes(v))v='log';
  const sec={callit:'friend',verdict:'verdict'}[v]||v;['home','log','dash','oracle','compare','card','friend','verdict'].forEach(x=>$('#v-'+x).classList.toggle('hide',x!=sec));$('nav').classList.toggle('hide',v=='callit');$('#demoT').classList.toggle('hide',v=='callit');$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+v));if(['log','card','dash','verdict'].includes(v))syncGuesses();if(v=='compare')loadPooled();if(window._sec!==sec){if(window._sec)scrollTo(0,0);window._sec=sec}$('#askBox').classList.add('hide')}
 $('#meName').value=D.me||'';$('#meName').onchange=e=>{D.me=e.target.value.trim().slice(0,20);save();toast('Saved')};
 const realDone=()=>D.dates.filter(d=>!d.demo&&d.status=='done');
@@ -520,10 +537,10 @@ function bfHtml(where){const n=realDone().length;if(n>=3||D.bfx||(where=='log'&&
  return`<div class="card nud"><div class="row" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><b style="font-size:16px">🕰️ Remember your last three dates?</b><button class="btn g bfx" type="button" style="min-height:0;padding:3px 9px" aria-label="Dismiss">✕</button></div><p style="margin:6px 0">Add them in a couple of minutes and start seeing your dating story.</p><div class="prog"><i style="width:${100*n/3}%"></i></div><small class="muted">${n} of 3 · your first 3-date recap unlocks at 3</small><button class="btn big bf" type="button">Add a past date</button></div>`}
 document.addEventListener('click',e=>{if(e.target.closest('.bf'))goLog('post');else if(e.target.closest('.bfx')){D.bfx=1;save();render()}});
 function heroUpd(){$('#homeNudge').innerHTML=bfHtml('home');$('#bfLog').innerHTML=bfHtml('log');{const n=realDone().length;$('#ms3').innerHTML=n>=3&&n<8?`<div class="card">${recap3()}</div>`:''}
-$('#heroGo').textContent=D.dates.length?'Log a date →':'Log your first date →';
+
  const b=$('#bkNote');if(b){const L=D.lastBackup;b.classList.toggle('hide',!D.dates.some(d=>!d.demo)||!!(L&&Date.now()-L<30*864e5));$('#bkLast').textContent=L?new Date(L).toLocaleDateString():'never'}}
 const goLog=m=>{location.hash='#log';mode=m;resetForm();setTimeout(()=>{$('#formCard').scrollIntoView({block:'start'});scrollBy(0,-70);f.nick.focus({preventScroll:true})},120)};
-$('#heroGo').onclick=$('#homeGo2').onclick=()=>goLog('post');$('#homeAsk').onclick=()=>goLog('pre');
+$('#heroGo').onclick=$('#homeGo2').onclick=()=>goLog('post');$('#heroOracle').onclick=()=>location.hash='#oracle';$('#homeAsk').onclick=()=>goLog('pre');
 $('#heroDemo').onclick=()=>{$('#demo').click();location.hash='#dash'};
 async function exportData(){const shots={};Object.keys(localStorage).filter(k=>k.startsWith(SK)).forEach(k=>shots[k.slice(SK.length)]=localStorage[k]);
  const blob=new Blob([JSON.stringify({app:'datelog',v:1,exported:new Date().toISOString(),data:JSON.parse(JSON.stringify(D,(k,v)=>k=='_n'?undefined:v)),shots},null,1)],{type:'application/json'}),name='datelog-backup-'+today()+'.json',file=new File([blob],name,{type:'application/json'});
@@ -554,7 +571,7 @@ function poolRow(d){const r=poolRecord(d),c=cleanCats(d.cats),lab=(a,k)=>(a||[])
  draw:lab(r.draw,'draw'),hoping:lab(r.hoping,'hoping'),concerns:lab(r.concerns,'concerns'),why:lab(r.why,'why'),they:lab(r.they,'they'),age_band:r.ageBand||null,gender:r.gender||null,city:'Los Angeles'}}
 let poolBusy=false;async function poolSync(){if(!D.pool||poolBusy)return;poolBusy=true;D.pooled=D.pooled||[];let n=0;try{people(true);for(const d of D.dates.filter(d=>d.status=='done'&&!d.demo)){if(!d.pid){d.pid=ruuid();save()}if(D.pooled.includes(d.pid))continue;try{await sbPost('pooled_dates',poolRow(d));D.pooled.push(d.pid);save();n++}catch(e){}}}finally{poolBusy=false}return n}
 let PS=null,psT=0;async function loadPooled(){if(!D.pool||Date.now()-psT<60000)return;psT=Date.now();try{PS=await sbRpc('pooled_summary');render()}catch(e){}}
-// ---- Community Oracle (opt-in anonymous public feed; RPCs in supabase/community.sql) ----
+// ---- The Crowd (opt-in anonymous public feed; RPCs in supabase/community.sql) ----
 const CO_AREAS=['West LA','Santa Monica','Venice/Marina','Silver Lake/Echo Park','Downtown','Hollywood','Mid-City','Valley','South Bay','Pasadena','Other LA'];
 const VID=(()=>{let v=localStorage.getItem('datelog.vid');if(!/^[0-9a-f]{32}$/.test(v||'')){v=rhex(16);localStorage.setItem('datelog.vid',v)}return v})();
 const VK='datelog.votes',myVotes=()=>{try{return JSON.parse(localStorage.getItem(VK)||'{}')}catch(e){return{}}},setVotes=o=>localStorage.setItem(VK,JSON.stringify(o));
@@ -564,7 +581,7 @@ const cap=t=>t?t[0].toUpperCase()+t.slice(1):'';
 function coArgs(r){const nk=$('#coNick').value.trim().replace(/^["“”']+|["“”']+$/g,'').slice(0,16)||r.nick;
  if(!/^[\p{L} .'’-]{1,16}$/u.test(nk)||BAD.test(nk))return'Public nickname: letters only, no contact info';
  if(/^[A-Z][a-z]+\s+[A-Z][a-z]+$/.test(nk)&&!/^(The|Mr|Ms|Mx|Dr|Miss|Señor)\s/.test(nk))return'That looks like a real full name — use a nickname like “The Architect” or initials';
- const dy=coDay(r.date);if(!dy)return'Community posts are for dates in the next 2 weeks';if(!OPT.type.includes(r.type))return'Pick a date type';
+ const dy=coDay(r.date);if(!dy)return'The Crowd is for dates in the next 2 weeks';if(!OPT.type.includes(r.type))return'Pick a date type';
  return{p_nick:nk,p_type:r.type,p_area:$('#coArea').value,p_day:dy.l,p_met:r.met,p_excite:r.excite||null,p_days_until:dy.n,p_poster:VID}}
 const coLine=a=>`${cap(a.p_type||a.date_type)} in ${esc(a.p_area||a.area)} with “${esc(a.p_nick||a.nick)}”`;
 function coPrevUpd(){const on=$('#coPost').checked;$('#coOpts').classList.toggle('hide',!on);if(!on)return;if(!$('#coNick').dataset.t)$('#coNick').placeholder=f.nick.value?'“'+f.nick.value+'” or a new nickname':'e.g. The Architect or J.R.';
@@ -576,28 +593,36 @@ function coFormUpd(){$('#coFld').classList.toggle('hide',!CO.ok||!!editId)}
 async function coLoad(force){if(!force&&Date.now()-CO.t<20000)return;CO.t=Date.now();try{const rows=await sbRpc('list_community',{p_voter:VID});CO.ok=true;CO.posts=Array.isArray(rows)?rows:[];
   const V=myVotes();CO.posts.forEach(p=>{if(p.my_pick){V[p.id]={pick:p.my_pick,outcome:p.outcome||null}}});setVotes(V);
   let ch=false;D.dates.forEach(d=>{const p=d.co&&CO.posts.find(x=>x.id==d.co.id);if(p&&(p.yes_votes!==d.co.yes||p.no_votes!==d.co.no)){d.co.yes=p.yes_votes;d.co.no=p.no_votes;ch=true}});if(ch){save();render()}}
- catch(e){CO.ok=false;CO.why=/404/.test(e.message)?'soon':'down'}coFormUpd();coRender()}
+ catch(e){CO.ok=false;CO.why=/404/.test(e.message)?'soon':'down'}coFormUpd();coRender();homeRender()}
+let HL=null;const hlPool=()=>{const mine=new Set(D.dates.filter(d=>d.co).map(d=>d.co.id));return CO.ok?CO.posts.filter(p=>!p.outcome&&!mine.has(p.id)):[]};
+function homeRender(next){const el=$('#homeLive');if(!el)return;const ps=hlPool();let p=ps.find(x=>x.id==HL);
+ if(next||!p){const nv=ps.filter(x=>!x.my_pick&&x.id!=HL);p=nv[0]||(next?null:ps.find(x=>!x.my_pick))||null;if(!p&&!next&&ps.length)p=ps[0];HL=p?p.id:null}
+ if(!p){el.innerHTML=next&&ps.length?`<div class="card"><b>You’ve called every live date 🎉</b><p class="muted">Check back soon for new ones.</p><a class="btn" href="#oracle" style="text-decoration:none;display:inline-flex;align-items:center">See all in The Crowd</a></div>`:HL_PREVIEW;const c=$('#hlCta');if(c)c.onclick=()=>{goLog('pre');setTimeout(()=>{if(CO.ok){$('#coPost').checked=true;coPrevUpd()}},150)};return}
+ const y=p.yes_votes||0,n=p.no_votes||0,t=y+n,pk=p.my_pick;
+ el.innerHTML=`<div class="card co hl" data-id="${esc(p.id)}"><div class="eyebrow">🔴 Live from The Crowd</div><div class="coh" style="margin-top:6px">${coLine(p)} · ${esc(p.day_label)}</div><small class="muted">met via ${esc(p.met)}${p.excite?' · excitement '+p.excite+'/5':''}</small><div style="margin:8px 0 6px"><b>Will there be a 2nd date?</b></div>
+ ${pk?`<div class="tally"><i style="width:${t?100*y/t:0}%"></i><u style="width:${t?100*n/t:0}%"></u></div><small class="muted">😍 ${y} love story · 💀 ${n} one-date wonder · you said ${pk=='yes'?'love story':'one-date wonder'}</small><div class="row" style="margin-top:10px"><button class="btn" id="hlNext" type="button">Call another →</button><a href="#oracle" style="color:var(--tx)">See all in The Crowd</a></div>`:`<div class="fbig"><button type="button" class="cov" data-v="yes"><span>😍</span>Love story</button><button type="button" class="cov" data-v="no"><span>💀</span>One-date wonder</button></div><div style="margin-top:8px"><a href="#oracle" style="color:var(--mu);font-size:13px">See all in The Crowd</a></div>`}</div>`;
+ const nx=$('#hlNext');if(nx)nx.onclick=()=>homeRender(true)}
 function coAcc(){const V=Object.values(myVotes()).filter(v=>v.outcome);return{n:V.length,r:V.filter(v=>v.pick==v.outcome).length}}
-function coRender(){const el=$('#coFeed');if(!el)return;if(CO.ok===null){el.innerHTML='<div class="card"><p class="muted">Loading the Community Oracle…</p></div>';return}
- if(!CO.ok){el.innerHTML=`<div class="card fun"><h2>🌍 Community Oracle — ${CO.why=='soon'?'coming soon':'taking a break'}</h2><p>${CO.why=='soon'?'Soon strangers in LA will be able to vote on real upcoming dates — love story or one-date wonder?':'We can’t reach the Community Oracle right now. Try again in a bit.'}</p><p class="muted">Meanwhile, your friends can already call your dates.</p><button class="btn big" type="button" onclick="goLog('pre')">Plan a date &amp; ask friends 🔮</button></div>`;return}
+function coRender(){const el=$('#coFeed');if(!el)return;if(CO.ok===null){el.innerHTML='<div class="card"><p class="muted">Loading The Crowd…</p></div>';return}
+ if(!CO.ok){el.innerHTML=`<div class="card fun"><h2>🌍 The Crowd — ${CO.why=='soon'?'coming soon':'taking a break'}</h2><p>${CO.why=='soon'?'Soon strangers in LA will be able to vote on real upcoming dates — love story or one-date wonder?':'We can’t reach The Crowd right now. Try again in a bit.'}</p><p class="muted">Meanwhile, your friends can already call your dates.</p><button class="btn big" type="button" onclick="goLog('pre')">Plan a date &amp; ask friends 🔮</button></div>`;return}
  const mine=new Set(D.dates.filter(d=>d.co).map(d=>d.co.id)),a=coAcc(),ps=CO.posts;
- el.innerHTML=`<div class="card fun"><h2 style="font-size:22px">🌍 Community Oracle</h2><p style="margin:4px 0 8px">Real upcoming dates around LA. One tap: love story or one-date wonder? Anonymous — no account, no comments.</p>
- <div class="tile" style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px">${a.n?`🔮 Your Oracle accuracy: <b>${a.r}/${a.n}</b> called right (${pct(a.r,a.n)}%)`:'🔮 Vote on a few — your Oracle accuracy appears once their outcomes are revealed.'}</div>
+ el.innerHTML=`<div class="card fun"><h2 style="font-size:22px">🌍 The Crowd</h2><p style="margin:4px 0 8px"><b>Wisdom of the crowd: strangers call it, you see if they were right.</b> Real upcoming dates around LA. One tap: love story or one-date wonder? Anonymous — no account, no comments.</p>
+ <div class="tile" style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px">${a.n?`🔮 Your calls: <b>${a.r}/${a.n}</b> right (${pct(a.r,a.n)}%)`:'🔮 Vote on a few — your score appears once their outcomes are revealed.'}</div>
  <button class="btn big" type="button" id="coCta">Got a date? Let the crowd call it</button></div>
  ${ps.length?ps.map(p=>{const y=p.yes_votes||0,n=p.no_votes||0,t=y+n,me=mine.has(p.id),pk=p.my_pick,res=p.outcome;
   return`<div class="card co" data-id="${esc(p.id)}"><div class="row" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><div class="coh">${coLine(p)}</div>${me?'<span class="st upcoming">your post</span>':''}</div><small class="muted">${esc(p.day_label)} · met via ${esc(p.met)}${p.excite?' · excitement '+p.excite+'/5':''}</small>
   <div style="margin:8px 0 6px"><b>${res?'The result is in':'Will there be a 2nd date?'}</b></div>
   ${!res&&!pk&&!me?`<div class="fbig"><button type="button" class="cov" data-v="yes"><span>😍</span>Love story</button><button type="button" class="cov" data-v="no"><span>💀</span>One-date wonder</button></div>`:''}
   ${res||pk||me?`<div class="tally"><i style="width:${t?100*y/t:0}%"></i><u style="width:${t?100*n/t:0}%"></u></div><small class="muted">😍 ${y} love story · 💀 ${n} one-date wonder</small>`:''}
-  ${res?`<div class="cores">${res=='yes'?'💞 There was a 2nd date!':'💀 No 2nd date'}${pk?(pk==res?' · You called it ✅':' · You missed this one ❌'):''}</div>`:pk?`<div class="cores">You said ${pk=='yes'?'😍 love story':'💀 one-date wonder'} · reveal after the date</div>`:''}</div>`}).join(''):'<div class="card"><p>No community dates right now.</p><p class="muted">Be the first — log an upcoming date and tick “Also post to Community Oracle”.</p></div>'}`;
+  ${res?`<div class="cores">${res=='yes'?'💞 There was a 2nd date!':'💀 No 2nd date'}${pk?(pk==res?' · You called it ✅':' · You missed this one ❌'):''}</div>`:pk?`<div class="cores">You said ${pk=='yes'?'😍 love story':'💀 one-date wonder'} · reveal after the date</div>`:''}</div>`}).join(''):'<div class="card"><p>No community dates right now.</p><p class="muted">Be the first — log an upcoming date and tick “Also ask The Crowd”.</p></div>'}`;
  $('#coCta').onclick=()=>{goLog('pre');setTimeout(()=>{if(CO.ok){$('#coPost').checked=true;coPrevUpd()}},150)}}
 document.addEventListener('click',async e=>{const b=e.target.closest('.cov');if(!b)return;const id=b.closest('.co').dataset.id,p=CO.posts.find(x=>x.id==id);if(!p)return;$$('.cov',b.parentNode).forEach(x=>x.disabled=true);
- try{const r=await sbRpc('vote_community',{p_post:id,p_voter:VID,p_pick:b.dataset.v});p.my_pick=b.dataset.v;if(r&&r.yes!=null){p.yes_votes=r.yes;p.no_votes=r.no}const V=myVotes();V[id]={pick:b.dataset.v,outcome:null};setVotes(V);toast('🔮 Vote locked in')}catch(x){toast('Vote didn’t go through — try again')}coRender()});
-async function coPublish(d,args){try{const r=await sbRpc('post_community',args);if(!r||!r.id)throw 0;d.co={id:r.id,token:r.token,yes:0,no:0,line:coLine(args)};save();render();toast('🌍 Posted to Community Oracle');CO.t=0;coLoad()}catch(e){toast('Couldn’t post to Community Oracle — saved privately')}}
-async function coUnpost(d,quiet){const c=d.co;if(!c)return;try{await sbRpc('delete_community',{p_post:c.id,p_token:c.token})}catch(e){if(!quiet){toast('Couldn’t unpost — try again');return}}delete d.co;save();if(!quiet){render();toast('Removed from Community Oracle')}CO.t=0}
+ try{const r=await sbRpc('vote_community',{p_post:id,p_voter:VID,p_pick:b.dataset.v});p.my_pick=b.dataset.v;if(r&&r.yes!=null){p.yes_votes=r.yes;p.no_votes=r.no}const V=myVotes();V[id]={pick:b.dataset.v,outcome:null};setVotes(V);toast('🔮 Vote locked in')}catch(x){toast('Vote didn’t go through — try again')}coRender();homeRender()});
+async function coPublish(d,args){try{const r=await sbRpc('post_community',args);if(!r||!r.id)throw 0;d.co={id:r.id,token:r.token,yes:0,no:0,line:coLine(args)};save();render();toast('🌍 Posted to The Crowd');CO.t=0;coLoad()}catch(e){toast('Couldn’t post to The Crowd — saved privately')}}
+async function coUnpost(d,quiet){const c=d.co;if(!c)return;try{await sbRpc('delete_community',{p_post:c.id,p_token:c.token})}catch(e){if(!quiet){toast('Couldn’t unpost — try again');return}}delete d.co;save();if(!quiet){render();toast('Removed from The Crowd')}CO.t=0}
 let coRB=false;async function coResolve(){if(coRB)return;coRB=true;try{for(const d of D.dates.filter(d=>d.co&&!d.co.res&&d.status=='done'&&(d.second=='yes'||d.second=='no'))){try{await sbRpc('resolve_community',{p_post:d.co.id,p_token:d.co.token,p_outcome:d.second});d.co.res=d.second;save()}catch(e){}}}finally{coRB=false}}
-const coTag=d=>d.co?`<br><small>🌍 Community: 😍 ${d.co.yes||0} · 💀 ${d.co.no||0} <button class="btn g coDel" data-id="${d.id}" type="button" style="min-height:0;padding:2px 8px;font-size:12px">Unpost</button></small>`:'';
-document.addEventListener('click',e=>{const b=e.target.closest('.coDel');if(!b)return;const d=D.dates.find(x=>String(x.id)==b.dataset.id);if(d&&confirm('Remove this date from the Community Oracle? Votes are deleted too.'))coUnpost(d)});
+const coTag=d=>d.co?`<br><small>🌍 The Crowd: 😍 ${d.co.yes||0} · 💀 ${d.co.no||0} <button class="btn g coDel" data-id="${d.id}" type="button" style="min-height:0;padding:2px 8px;font-size:12px">Unpost</button></small>`:'';
+document.addEventListener('click',e=>{const b=e.target.closest('.coDel');if(!b)return;const d=D.dates.find(x=>String(x.id)==b.dataset.id);if(d&&confirm('Remove this date from The Crowd? Votes are deleted too.'))coUnpost(d)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncGuesses()});
 // ---- Key findings + Ask your data (templates, on-device) ----
 const MINN=3,EARLY=8;const INS=(()=>{const r1=x=>Math.round(x*10)/10,sg=x=>(x>0?'+':'')+r1(x).toFixed(1);
@@ -615,7 +640,7 @@ const MINN=3,EARLY=8;const INS=(()=>{const r1=x=>Math.round(x*10)/10,sg=x=>(x>0?
   return{t:Math.abs(g)<.3?`You're well calibrated: dates land within ${Math.abs(r1(g))} pts of your excitement on average (${e.length} dates).`:g<0?`You're a bit optimistic going in: dates go ${Math.abs(r1(g))} pts worse than your excitement on average, and ${hi} of ${e.length} fell short.`:`You're a bit pessimistic going in: dates go ${r1(g)} pts better than you expect on average (${e.length} dates).`,s:Math.abs(g)*Math.sqrt(e.length)/1.5,g,n:e.length,hi}};
  const spend=()=>{const sp=done().filter(d=>hasSp(d)&&(d.second=='yes'||d.second=='no')),y=sp.filter(d=>d.second=='yes').map(d=>d.spend),n=sp.filter(d=>d.second=='no').map(d=>d.spend);if(sp.length<3||!y.length||!n.length)return null;const ay=avg(y),an=avg(n),rel=(ay-an)/Math.max(1,an);
   return{t:Math.abs(rel)<.15?`Spending doesn't seem to change the outcome: ~${money(ay)} on dates with a 2nd vs ~${money(an)} without.`:rel>0?`Dates that led to a 2nd cost more: ${money(ay)} on average vs ${money(an)} when they didn't.`:`Pricier isn't better: dates that led to a 2nd averaged ${money(ay)} vs ${money(an)} when they didn't.`,s:Math.abs(rel)*Math.sqrt(sp.length),n:sp.length}};
- const oracle=()=>{const l=leaderboard().filter(x=>x.ranked);if(!l.length)return null;const o=l[0];return{t:`${o.f} is your Oracle 🔮: ${P100(o.acc)} accurate over ${o.n} calls`+(l.length>1?`, ahead of ${l[1].f} (${P100(l[1].acc)}).`:'.'),s:1.2+o.acc,n:o.n,u:'friend calls'}};
+ const oracle=()=>{const l=leaderboard().filter(x=>x.ranked);if(!l.length)return null;const o=l[0];return{t:`${o.f} is your best caller 🔮: ${P100(o.acc)} accurate over ${o.n} calls`+(l.length>1?`, ahead of ${l[1].f} (${P100(l[1].acc)}).`:'.'),s:1.2+o.acc,n:o.n,u:'friend calls'}};
  const good=()=>{const w=done().filter(d=>d.went);if(w.length<3)return null;const g=w.filter(d=>d.went>=4),ag=g.filter(d=>d.mine=='yes').length;return{t:`Success isn’t only 2nd dates: ${g.length} of ${w.length} dates were 4–5★ for you`+(g.length?`, and you wanted to see ${ag} of those ${g.length} again.`:'.'),s:1+w.length/30,n:w.length}};
  const findings=()=>{if(res().length<3&&done().length<3)return null;const o=overall(),m=meet(),head=o?{t:o.t+(m?' '+m.t:''),s:9,n:o.n}:m;return [head,...[pred(),evr(),spend(),oracle(),dtype(),good()].filter(Boolean).sort((a,b)=>b.s-a.s)].filter(x=>x&&x.n>=MINN).slice(0,3)};
  const cnt=a=>{const c={};a.forEach(x=>c[x]=(c[x]||0)+1);return Object.entries(c).sort((a,b)=>b[1]-a[1])};
