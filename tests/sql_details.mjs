@@ -1,5 +1,5 @@
 // SQL check in PGlite: cd /tmp/pgl && npm i @electric-sql/pglite && node /workspace/date-tracker/tests/sql_details.mjs
-import {PGlite} from '/tmp/pgl/node_modules/@electric-sql/pglite/dist/index.js';import {pgcrypto} from '@electric-sql/pglite/contrib/pgcrypto';import fs from 'fs';
+import {PGlite} from '/tmp/pgl/node_modules/@electric-sql/pglite/dist/index.js';import {pgcrypto} from '/tmp/pgl/node_modules/@electric-sql/pglite/dist/contrib/pgcrypto.js';import fs from 'fs';
 const db=new PGlite({extensions:{pgcrypto}});const S='/workspace/date-tracker/supabase/';
 await db.exec("create role anon; create role authenticated;");
 for(const f of['schema.sql','community.sql','examples.sql','details.sql','details.sql']){try{await db.exec(fs.readFileSync(S+f,'utf8'));console.log('applied',f)}catch(e){console.log('ERR',f,e.message);process.exit(1)}}
